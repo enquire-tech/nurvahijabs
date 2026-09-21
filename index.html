@@ -3,1912 +3,1310 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
-<meta name="theme-color" content="#f7f1e9">
-<meta name="description" content="NŪRVĀ HIJABS — Premium, breathable and lightweight hijabs.">
+<meta name="theme-color" content="#f5f0e9">
 
 <title>NŪRVĀ HIJABS — Confidence in Every Layer</title>
 
 <style>
-
-/* =========================================================
-   NŪRVĀ HIJABS
-   APPLE-STYLE SCROLLING EDITORIAL WEBSITE
-   ========================================================= */
-
-:root{
-  --black:#171513;
-  --cream:#f7f1e9;
-  --cream2:#eee5da;
-  --taupe:#b8a797;
-  --brown:#69574b;
-  --line:#d8d0c7;
-  --muted:#766d65;
-  --white:#fff;
-}
-
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 html{
-  scroll-behavior:smooth;
+ scroll-behavior:smooth;
 }
 
 body{
-  margin:0;
-  background:var(--cream);
-  color:var(--black);
-  font-family:Arial,Helvetica,sans-serif;
-  overflow-x:hidden;
+ margin:0;
+ background:#f6f1e9;
+ color:#171513;
+ font-family:Arial,Helvetica,sans-serif;
+ overflow-x:hidden;
 }
 
 img{
-  max-width:100%;
+ max-width:100%;
+ display:block;
 }
 
 a{
-  color:inherit;
-  text-decoration:none;
+ color:inherit;
+ text-decoration:none;
 }
 
-button,
-input{
-  font:inherit;
+button,input{
+ font:inherit;
 }
 
-
-/* =========================================================
-   TOP BAR
-   ========================================================= */
+/* TOP BAR */
 
 .topbar{
-  height:27px;
-  background:#171513;
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:8px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
+ height:30px;
+ background:#171513;
+ color:#fff;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:8px;
+ letter-spacing:.22em;
+ text-transform:uppercase;
 }
 
+/* NAVIGATION */
 
-/* =========================================================
-   NAVIGATION
-   ========================================================= */
-
-nav{
-  height:82px;
-  padding:0 4%;
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  align-items:center;
-  background:rgba(247,241,233,.92);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  position:sticky;
-  top:0;
-  z-index:100;
-  border-bottom:1px solid rgba(23,21,19,.08);
+.nav{
+ height:82px;
+ padding:0 5%;
+ display:grid;
+ grid-template-columns:1fr auto 1fr;
+ align-items:center;
+ background:#f6f1e9;
+ border-bottom:1px solid #ddd5cb;
+ position:sticky;
+ top:0;
+ z-index:50;
 }
 
-.nav-left{
-  display:flex;
-  gap:27px;
-  font-size:10px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
+.navlinks{
+ display:flex;
+ gap:28px;
+ font-size:10px;
+ letter-spacing:.14em;
+ text-transform:uppercase;
 }
 
 .logo{
-  width:145px;
-  height:65px;
-  object-fit:contain;
-  mix-blend-mode:multiply;
+ width:155px;
+ max-height:62px;
+ object-fit:contain;
 }
 
-.nav-right{
-  justify-self:end;
-  display:flex;
-  align-items:center;
-  gap:17px;
+.navright{
+ justify-self:end;
+ display:flex;
+ gap:18px;
+ font-size:18px;
 }
 
-.nav-icon{
-  border:0;
-  background:none;
-  cursor:pointer;
-  font-size:18px;
-  color:var(--black);
+.navright button{
+ border:0;
+ background:none;
+ cursor:pointer;
 }
 
-.bag{
-  position:relative;
-}
-
-.cart-number{
-  position:absolute;
-  right:-8px;
-  top:-7px;
-  width:15px;
-  height:15px;
-  background:var(--black);
-  color:white;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  font-size:8px;
-}
-
-
-/* =========================================================
-   HERO
-   ========================================================= */
+/* HERO */
 
 .hero{
-  min-height:calc(100vh - 109px);
-  position:relative;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 70% 45%,#d8c8b8 0%,#c8b6a4 25%,#eee5da 63%,#f7f1e9 100%);
+ min-height:calc(100vh - 112px);
+ position:relative;
+ overflow:hidden;
+ background:#e9dfd4;
+ display:flex;
+ align-items:center;
 }
 
-.hero-content{
-  position:absolute;
-  left:6.5%;
-  top:21%;
-  width:390px;
-  z-index:5;
+.hero-copy{
+ width:43%;
+ padding:8vw 5vw;
+ position:relative;
+ z-index:5;
 }
 
 .eyebrow{
-  font-size:9px;
-  letter-spacing:.32em;
-  text-transform:uppercase;
-  color:#70655c;
-  margin-bottom:18px;
+ font-size:9px;
+ letter-spacing:.32em;
+ text-transform:uppercase;
+ margin-bottom:20px;
+ color:#685e55;
 }
 
-.hero h1{
-  font-family:Georgia,"Times New Roman",serif;
-  font-weight:400;
-  font-size:clamp(48px,6vw,82px);
-  line-height:.91;
-  letter-spacing:-.055em;
-  margin:0 0 24px;
+h1{
+ font-family:Georgia,"Times New Roman",serif;
+ font-size:clamp(55px,7vw,105px);
+ line-height:.88;
+ letter-spacing:-.065em;
+ font-weight:400;
+ margin:0 0 28px;
 }
 
-.hero-text{
-  color:#625a53;
-  font-size:12px;
-  line-height:1.65;
-  max-width:350px;
+.hero-copy p{
+ max-width:430px;
+ font-size:13px;
+ line-height:1.8;
+ color:#665d56;
 }
 
-.btn{
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  background:var(--black);
-  color:#fff;
-  padding:15px 22px;
-  margin-top:18px;
-  font-size:9px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
+.button{
+ display:inline-block;
+ background:#171513;
+ color:#fff;
+ padding:16px 25px;
+ margin-top:15px;
+ font-size:9px;
+ letter-spacing:.18em;
+ text-transform:uppercase;
+}
+
+/* HERO HIJAB */
+
+.hero-image-wrap{
+ position:absolute;
+ right:-4%;
+ top:-12%;
+ width:67%;
+ height:125%;
+ overflow:hidden;
+}
+
+.hero-image{
+ position:absolute;
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ object-position:center;
+ mix-blend-mode:multiply;
+ transform:translate3d(0,0,0) scale(1.08);
+ will-change:transform;
 }
 
 .scroll-label{
-  margin-top:26px;
-  font-size:8px;
-  letter-spacing:.22em;
-  text-transform:uppercase;
-  color:#81766d;
+ position:absolute;
+ left:5vw;
+ bottom:35px;
+ font-size:8px;
+ letter-spacing:.2em;
+ text-transform:uppercase;
 }
 
 .scroll-line{
-  height:30px;
-  width:1px;
-  background:#92877e;
-  margin-top:10px;
+ width:1px;
+ height:35px;
+ background:#777;
+ margin-top:8px;
 }
 
+/* FEATURES */
 
-/* =========================================================
-   MAIN HERO HIJAB
-   ========================================================= */
-
-.hero-hijab-wrap{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  overflow:hidden;
+.features{
+ display:grid;
+ grid-template-columns:repeat(5,1fr);
+ background:#faf7f2;
+ border-top:1px solid #ddd5cb;
+ border-bottom:1px solid #ddd5cb;
 }
 
-.hero-hijab{
-  position:absolute;
-
-  width:min(68vw,900px);
-
-  right:-7%;
-  top:5%;
-
-  transform:
-    translate3d(
-      var(--hero-x,0px),
-      var(--hero-y,0px),
-      0
-    )
-    rotate(var(--hero-r,0deg))
-    scale(var(--hero-scale,1));
-
-  transform-origin:center center;
-
-  will-change:transform;
-
-  filter:drop-shadow(
-    -20px 25px 35px rgba(0,0,0,.14)
-  );
-
-  transition:
-    transform .08s linear;
+.feature{
+ text-align:center;
+ padding:30px 10px;
+ border-right:1px solid #ddd5cb;
 }
 
-.hero-number{
-  position:absolute;
-  right:7%;
-  top:34%;
-  z-index:4;
-  font-size:9px;
-  line-height:2.2;
-  letter-spacing:.12em;
-  color:#655b53;
+.feature:last-child{
+ border-right:0;
 }
 
-.hero-number span{
-  display:block;
-  margin-bottom:12px;
+.feature-icon{
+ font-size:22px;
+ margin-bottom:12px;
 }
 
-
-/* =========================================================
-   BENEFITS
-   ========================================================= */
-
-.benefits{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  background:#faf7f3;
-  border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);
+.feature strong{
+ display:block;
+ font-size:8px;
+ letter-spacing:.17em;
+ text-transform:uppercase;
 }
 
-.benefit{
-  min-height:110px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  text-align:center;
-  border-right:1px solid var(--line);
-  padding:15px;
+.feature small{
+ display:block;
+ margin-top:7px;
+ color:#80766d;
+ font-size:8px;
 }
 
-.benefit:last-child{
-  border-right:0;
-}
-
-.benefit-icon{
-  font-size:22px;
-  margin-bottom:9px;
-}
-
-.benefit-title{
-  font-size:8px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-}
-
-.benefit-text{
-  font-size:8px;
-  color:#81766d;
-  margin-top:5px;
-}
-
-
-/* =========================================================
-   EDITORIAL HIJAB SECTIONS
-   ========================================================= */
+/* EDITORIAL SECTIONS */
 
 .editorial{
-  position:relative;
-  height:650px;
-  overflow:hidden;
-  background:var(--cream2);
+ min-height:650px;
+ position:relative;
+ overflow:hidden;
+ display:flex;
+ align-items:center;
+ background:#eee6dd;
 }
 
 .editorial:nth-of-type(even){
-  background:#f5eee6;
+ background:#f7f2eb;
 }
 
-.editorial-content{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  width:310px;
-  z-index:5;
+.editorial-copy{
+ width:38%;
+ padding:70px 5vw;
+ position:relative;
+ z-index:5;
 }
 
-.editorial.left .editorial-content{
-  left:6.5%;
-}
-
-.editorial.right .editorial-content{
-  right:6.5%;
-}
-
-.section-number{
-  font-size:10px;
-  letter-spacing:.15em;
-  margin-bottom:28px;
-}
-
-.section-line{
-  display:inline-block;
-  width:55px;
-  height:1px;
-  background:#9c9085;
-  vertical-align:middle;
-  margin-left:12px;
+.number{
+ font-size:9px;
+ letter-spacing:.2em;
+ color:#766c63;
+ margin-bottom:28px;
 }
 
 .editorial h2{
-  font-family:Georgia,"Times New Roman",serif;
-  font-weight:400;
-  font-size:50px;
-  line-height:.92;
-  letter-spacing:-.045em;
-  margin:0 0 22px;
+ font-family:Georgia,"Times New Roman",serif;
+ font-size:clamp(43px,5vw,75px);
+ line-height:.91;
+ font-weight:400;
+ letter-spacing:-.055em;
+ margin:0 0 22px;
 }
 
 .editorial p{
-  color:#6c6259;
-  line-height:1.65;
-  font-size:11px;
-  max-width:280px;
+ max-width:330px;
+ font-size:12px;
+ line-height:1.75;
+ color:#6b625b;
 }
 
 .explore{
-  display:inline-block;
-  margin-top:18px;
-  font-size:9px;
-  text-transform:uppercase;
-  letter-spacing:.16em;
+ display:inline-block;
+ margin-top:18px;
+ font-size:9px;
+ letter-spacing:.18em;
+ text-transform:uppercase;
+ border-bottom:1px solid #171513;
+ padding-bottom:7px;
 }
 
-
-/* =========================================================
-   MOVING HIJABS
-   ========================================================= */
-
-.fabric{
-  position:absolute;
-  width:min(75vw,1000px);
-  max-height:850px;
-  object-fit:contain;
-
-  will-change:transform;
-
-  filter:drop-shadow(
-    0 30px 40px rgba(0,0,0,.14)
-  );
-
-  transition:
-    transform .08s linear;
+.editorial-image{
+ position:absolute;
+ width:72%;
+ height:125%;
+ top:-12%;
+ object-fit:cover;
+ mix-blend-mode:multiply;
+ will-change:transform;
 }
 
-.editorial.left .fabric{
-  right:-14%;
-  top:-10%;
+.image-right{
+ right:-12%;
 }
 
-.editorial.right .fabric{
-  left:-14%;
-  top:-10%;
+.image-left{
+ left:-12%;
 }
 
-.fabric[data-speed="1"]{
-  --speed:1;
-}
-
-.fabric[data-speed="2"]{
-  --speed:1.3;
-}
-
-.fabric[data-speed="3"]{
-  --speed:.75;
-}
-
-.fabric[data-speed="4"]{
-  --speed:1.15;
-}
-
-
-/* =========================================================
-   COLLECTION
-   ========================================================= */
+/* COLLECTION */
 
 .collection{
-  padding:90px 6%;
-  background:#f7f1e9;
+ padding:100px 5%;
+ background:#f6f1e9;
 }
 
-.collection-heading{
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  gap:30px;
-  margin-bottom:38px;
+.collection-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:end;
+ margin-bottom:45px;
 }
 
 .collection h2{
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:48px;
-  line-height:.95;
-  font-weight:400;
-  letter-spacing:-.05em;
-  margin:0;
+ font:400 clamp(45px,5vw,70px)/.9 Georgia,serif;
+ letter-spacing:-.055em;
+ margin:0;
 }
 
-.collection-description{
-  max-width:300px;
-  color:#756c64;
-  font-size:11px;
-  line-height:1.6;
+.collection-head p{
+ max-width:320px;
+ color:#70675f;
+ font-size:11px;
+ line-height:1.7;
 }
 
 .products{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:20px;
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:20px;
+}
+
+.product{
+ min-width:0;
 }
 
 .product-image{
-  height:390px;
-  background:#e7ddd2;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+ height:390px;
+ overflow:hidden;
+ background:#e7ded4;
 }
 
 .product-image img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  transition:transform .7s ease;
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ transition:transform .8s cubic-bezier(.2,.7,.2,1);
 }
 
-.product-card:hover .product-image img{
-  transform:scale(1.04);
+.product:hover .product-image img{
+ transform:scale(1.05);
 }
 
 .product-name{
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:15px;
-  margin-top:13px;
+ font:18px Georgia,serif;
+ margin-top:15px;
 }
 
 .price{
-  font-size:11px;
-  margin-top:5px;
+ font-size:11px;
+ margin-top:5px;
 }
 
-.swatches{
-  display:flex;
-  gap:5px;
-  margin-top:9px;
+.product-info{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
 }
 
-.swatch{
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  border:1px solid rgba(0,0,0,.18);
+.plus{
+ width:25px;
+ height:25px;
+ border:1px solid #aaa;
+ border-radius:50%;
+ display:grid;
+ place-items:center;
 }
 
-.product-button{
-  display:block;
-  margin-top:12px;
-  background:none;
-  border:0;
-  padding:0;
-  font-size:8px;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-  cursor:pointer;
-}
-
-
-/* =========================================================
-   STORY
-   ========================================================= */
+/* STORY */
 
 .story{
-  min-height:600px;
-  position:relative;
-  overflow:hidden;
-  background:#d9c7b6;
+ min-height:650px;
+ position:relative;
+ overflow:hidden;
+ background:#ded0c2;
+ display:flex;
+ align-items:center;
 }
 
-.story-background{
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 60% 70%,rgba(255,255,255,.5),transparent 28%),
-    linear-gradient(115deg,#e5d8cb,#c4aa94);
+.story-image{
+ position:absolute;
+ inset:0;
+ width:100%;
+ height:120%;
+ object-fit:cover;
+ opacity:.9;
+ mix-blend-mode:multiply;
+ will-change:transform;
 }
 
-.story-hijab{
-  position:absolute;
-  width:65%;
-  right:-5%;
-  bottom:-15%;
-  filter:drop-shadow(0 25px 30px rgba(0,0,0,.15));
-  transform:
-    translate3d(
-      var(--story-x,0px),
-      var(--story-y,0px),
-      0
-    )
-    scale(var(--story-scale,1));
-
-  will-change:transform;
+.story-copy{
+ position:relative;
+ z-index:4;
+ padding:80px 7%;
+ max-width:530px;
 }
 
-.story-content{
-  position:relative;
-  z-index:3;
-  padding:130px 0 130px 7%;
-  width:450px;
+.story-copy h2{
+ font:400 clamp(48px,6vw,82px)/.9 Georgia,serif;
+ letter-spacing:-.06em;
+ margin:0 0 25px;
 }
 
-.story-content h2{
-  font-family:Georgia,"Times New Roman",serif;
-  font-weight:400;
-  font-size:55px;
-  line-height:.9;
-  letter-spacing:-.05em;
-  margin:0 0 20px;
+.story-copy p{
+ font-size:12px;
+ line-height:1.8;
+ color:#5f554d;
 }
 
-.story-content p{
-  color:#665b53;
-  font-size:11px;
-  line-height:1.7;
-}
-
-
-/* =========================================================
-   NEWSLETTER
-   ========================================================= */
+/* NEWSLETTER */
 
 .newsletter{
-  padding:90px 20px;
-  text-align:center;
-  background:#e7d9cc;
+ padding:90px 20px;
+ text-align:center;
+ background:#eee4da;
 }
 
 .newsletter h2{
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:38px;
-  font-weight:400;
-  margin:0 0 12px;
+ font:400 48px Georgia,serif;
+ margin:0 0 15px;
 }
 
 .newsletter p{
-  color:#756c64;
-  font-size:11px;
+ font-size:11px;
+ color:#71675f;
 }
 
 .form{
-  width:min(520px,100%);
-  margin:25px auto 0;
-  display:flex;
-  background:#fff;
+ display:flex;
+ max-width:500px;
+ margin:28px auto 0;
+ background:#fff;
 }
 
 .form input{
-  flex:1;
-  border:0;
-  padding:16px;
-  outline:none;
-  font-size:11px;
-  background:#fff;
+ flex:1;
+ border:0;
+ outline:0;
+ padding:17px;
+ background:#fff;
 }
 
 .form button{
-  border:0;
-  background:#171513;
-  color:white;
-  padding:0 25px;
-  font-size:8px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
+ border:0;
+ background:#171513;
+ color:#fff;
+ padding:0 25px;
+ font-size:9px;
+ letter-spacing:.15em;
+ text-transform:uppercase;
 }
 
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
+/* FOOTER */
 
 footer{
-  padding:45px 6%;
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  border-top:1px solid var(--line);
-  background:#f7f1e9;
+ padding:55px 5%;
+ background:#f6f1e9;
+ border-top:1px solid #ddd5cb;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:30px;
 }
 
 .footer-logo{
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:28px;
-  letter-spacing:.18em;
-}
-
-.footer-tagline{
-  font-size:8px;
-  color:#776e66;
-  margin-top:8px;
+ font:30px Georgia,serif;
+ letter-spacing:.2em;
 }
 
 .footer-links{
-  display:flex;
-  gap:20px;
-  font-size:9px;
+ display:flex;
+ gap:22px;
+ font-size:9px;
+ text-transform:uppercase;
+ letter-spacing:.12em;
 }
 
-.copyright{
-  color:#81776e;
-  font-size:8px;
-}
-
-
-/* =========================================================
-   CART
-   ========================================================= */
-
-.drawer{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.5);
-  z-index:500;
-  display:none;
-}
-
-.drawer.open{
-  display:block;
-}
+/* CART */
 
 .cart{
-  position:absolute;
-  right:0;
-  top:0;
-  width:min(420px,92vw);
-  height:100%;
-  background:#fff;
-  padding:30px;
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.45);
+ z-index:100;
+ opacity:0;
+ pointer-events:none;
+ transition:.3s;
+}
+
+.cart.open{
+ opacity:1;
+ pointer-events:auto;
+}
+
+.cart-panel{
+ position:absolute;
+ right:0;
+ top:0;
+ height:100%;
+ width:min(420px,92vw);
+ background:#faf7f2;
+ padding:35px;
+ transform:translateX(100%);
+ transition:.4s cubic-bezier(.2,.7,.2,1);
+}
+
+.cart.open .cart-panel{
+ transform:translateX(0);
 }
 
 .close{
-  float:right;
-  border:0;
-  background:none;
-  font-size:27px;
-  cursor:pointer;
+ float:right;
+ border:0;
+ background:none;
+ font-size:28px;
+ cursor:pointer;
 }
 
-.cart h2{
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:34px;
-  font-weight:400;
-  margin-top:50px;
+.cart-panel h2{
+ font:40px Georgia,serif;
+ margin-top:50px;
 }
 
 .checkout{
-  width:100%;
-  border:0;
-  background:#171513;
-  color:white;
-  padding:17px;
-  margin-top:20px;
-  font-size:9px;
-  letter-spacing:.15em;
-  text-transform:uppercase;
+ width:100%;
+ padding:16px;
+ background:#171513;
+ color:white;
+ border:0;
+ margin-top:25px;
+ text-transform:uppercase;
+ letter-spacing:.15em;
+ font-size:9px;
 }
 
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
+/* MOBILE */
 
 @media(max-width:800px){
 
-  .topbar{
-    font-size:6px;
-  }
+ .nav{
+   height:68px;
+   grid-template-columns:1fr auto;
+   padding:0 5%;
+ }
 
-  nav{
-    height:65px;
-    grid-template-columns:1fr auto;
-    padding:0 16px;
-  }
+ .navlinks{
+   display:none;
+ }
 
-  .nav-left{
-    display:none;
-  }
+ .logo{
+   width:130px;
+ }
 
-  .logo{
-    width:110px;
-    height:55px;
-  }
+ .hero{
+   min-height:760px;
+   display:block;
+ }
 
-  .nav-right{
-    gap:10px;
-  }
+ .hero-copy{
+   width:100%;
+   padding:65px 8% 20px;
+ }
 
-  .hero{
-    min-height:720px;
-  }
+ .hero-copy h1{
+   font-size:57px;
+ }
 
-  .hero-content{
-    top:70px;
-    left:24px;
-    width:calc(100% - 48px);
-  }
+ .hero-image-wrap{
+   top:330px;
+   right:-22%;
+   width:125%;
+   height:480px;
+ }
 
-  .hero h1{
-    font-size:48px;
-  }
+ .scroll-label{
+   display:none;
+ }
 
-  .hero-text{
-    font-size:10px;
-    max-width:300px;
-  }
+ .features{
+   grid-template-columns:repeat(2,1fr);
+ }
 
-  .hero-hijab{
-    width:125vw;
-    max-width:none;
-    right:-34%;
-    top:28%;
-  }
+ .feature{
+   padding:25px 5px;
+ }
 
-  .hero-number{
-    display:none;
-  }
+ .feature:nth-child(5){
+   grid-column:1/3;
+ }
 
-  .benefits{
-    grid-template-columns:repeat(2,1fr);
-  }
+ .editorial{
+   min-height:650px;
+   display:block;
+ }
 
-  .benefit{
-    min-height:90px;
-  }
+ .editorial-copy{
+   width:100%;
+   padding:55px 8% 15px;
+ }
 
-  .benefit:last-child{
-    grid-column:1/-1;
-  }
+ .editorial h2{
+   font-size:50px;
+ }
 
-  .editorial{
-    height:610px;
-  }
+ .editorial-image{
+   width:125%;
+   height:500px;
+   top:260px;
+ }
 
-  .editorial-content{
-    width:230px;
-    top:70px;
-    transform:none;
-  }
+ .image-right{
+   right:-25%;
+ }
 
-  .editorial.left .editorial-content,
-  .editorial.right .editorial-content{
-    left:22px;
-    right:auto;
-  }
+ .image-left{
+   left:-25%;
+ }
 
-  .editorial h2{
-    font-size:39px;
-  }
+ .collection{
+   padding:70px 5%;
+ }
 
-  .editorial p{
-    font-size:10px;
-    max-width:220px;
-  }
+ .collection-head{
+   display:block;
+ }
 
-  .fabric{
-    width:135vw;
-    max-width:none;
-    top:27% !important;
-  }
+ .collection-head p{
+   margin-top:18px;
+ }
 
-  .editorial.left .fabric{
-    right:-45%;
-  }
+ .products{
+   grid-template-columns:1fr 1fr;
+   gap:18px;
+ }
 
-  .editorial.right .fabric{
-    left:-45%;
-  }
+ .product-image{
+   height:260px;
+ }
 
-  .collection{
-    padding:65px 15px;
-  }
+ .product-name{
+   font-size:14px;
+ }
 
-  .collection-heading{
-    display:block;
-  }
+ .story{
+   min-height:650px;
+ }
 
-  .collection h2{
-    font-size:39px;
-  }
+ .story-image{
+   height:100%;
+ }
 
-  .collection-description{
-    margin-top:12px;
-  }
+ .story-copy{
+   padding:70px 8%;
+ }
 
-  .products{
-    grid-template-columns:1fr 1fr;
-    gap:18px 12px;
-  }
+ .story-copy h2{
+   font-size:52px;
+ }
 
-  .product-image{
-    height:220px;
-  }
+ footer{
+   flex-direction:column;
+   text-align:center;
+ }
 
-  .product-name{
-    font-size:13px;
-  }
-
-  .story{
-    min-height:600px;
-  }
-
-  .story-content{
-    padding:60px 22px;
-    width:280px;
-  }
-
-  .story-content h2{
-    font-size:43px;
-  }
-
-  .story-hijab{
-    width:110%;
-    right:-30%;
-    bottom:-5%;
-  }
-
-  footer{
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-    gap:22px;
-  }
-
-  .footer-links{
-    flex-wrap:wrap;
-    justify-content:center;
-  }
+ .footer-links{
+   flex-wrap:wrap;
+   justify-content:center;
+ }
 }
-
 </style>
 </head>
 
-
 <body>
 
-
-<!-- ======================================================
-     TOP BAR
-     ====================================================== -->
-
 <div class="topbar">
-  Free shipping on orders over $75 &nbsp; | &nbsp; Ships worldwide
+FREE SHIPPING ON ORDERS OVER $75 &nbsp; | &nbsp; SHIPS WORLDWIDE
 </div>
 
+<nav class="nav">
 
-<!-- ======================================================
-     NAV
-     ====================================================== -->
+ <div class="navlinks">
+   <a href="#">Shop</a>
+   <a href="#story">Our Story</a>
+   <a href="#collection">Journal</a>
+ </div>
 
-<nav>
+ <img class="logo" src="nurva-logo.PNG" alt="NŪRVĀ HIJABS">
 
-  <div class="nav-left">
-    <a href="#">Shop</a>
-    <a href="#story">Our Story</a>
-    <a href="#collection">Journal</a>
-  </div>
-
-  <img
-    class="logo"
-    src="nurva-logo.PNG"
-    alt="NŪRVĀ HIJABS"
-  >
-
-  <div class="nav-right">
-
-    <button class="nav-icon">⌕</button>
-
-    <button class="nav-icon">♙</button>
-
-    <button
-      class="nav-icon bag"
-      onclick="openCart()"
-    >
-      ♧
-      <span
-        class="cart-number"
-        id="cartNumber"
-      >0</span>
-    </button>
-
-  </div>
+ <div class="navright">
+   <button aria-label="Search">⌕</button>
+   <button aria-label="Account">♙</button>
+   <button onclick="openCart()" aria-label="Shopping bag">♧</button>
+ </div>
 
 </nav>
 
 
-<!-- ======================================================
-     HERO
-     ====================================================== -->
+<!-- HERO -->
 
 <section class="hero">
 
-  <div class="hero-content">
+ <div class="hero-copy">
 
-    <div class="eyebrow">
-      NŪRVĀ HIJABS
-    </div>
+   <div class="eyebrow">NŪRVĀ HIJABS</div>
 
-    <h1>
-      Confidence<br>
-      in Every Layer.
-    </h1>
+   <h1>
+     Confidence<br>
+     in Every Layer.
+   </h1>
 
-    <p class="hero-text">
-      Thoughtfully designed hijabs for your everyday moments —
-      soft, breathable, lightweight, and made to stay in place.
-    </p>
+   <p>
+     Thoughtfully designed hijabs for your everyday moments —
+     soft, breathable, lightweight, and made to stay in place.
+   </p>
 
-    <a
-      class="btn"
-      href="#collection"
-    >
-      Shop Collection →
-    </a>
+   <a class="button" href="#collection">
+     Shop Collection →
+   </a>
 
-    <div class="scroll-label">
-      Scroll to explore
-    </div>
+ </div>
 
-    <div class="scroll-line"></div>
+ <div class="hero-image-wrap">
+   <img
+     id="heroImg"
+     class="hero-image"
+     src="nurva-hero-hijab.jpg"
+     alt="NŪRVĀ flowing hijab"
 
-  </div>
+ </div>
 
-
-  <!-- REAL HERO HIJAB -->
-
-  <div class="hero-hijab-wrap">
-
-    <img
-      src="hero-hijab.png"
-      class="hero-hijab"
-      id="heroHijab"
-      alt="NŪRVĀ flowing hijab"
-    >
-
-  </div>
-
-
-  <div class="hero-number">
-
-    <span>01<br>Comfort</span>
-    <span>02<br>Modesty</span>
-    <span>03<br>Confidence</span>
-
-  </div>
+ <div class="scroll-label">
+   Scroll to explore
+   <div class="scroll-line"></div>
+ </div>
 
 </section>
 
 
-<!-- ======================================================
-     BENEFITS
-     ====================================================== -->
+<!-- FEATURES -->
 
-<section class="benefits">
+<section class="features">
 
-  <div class="benefit">
-    <div class="benefit-icon">✧</div>
-    <div class="benefit-title">Breathable</div>
-    <div class="benefit-text">All-day comfort</div>
-  </div>
+ <div class="feature">
+   <div class="feature-icon">≋</div>
+   <strong>Breathable</strong>
+   <small>All-day comfort</small>
+ </div>
 
-  <div class="benefit">
-    <div class="benefit-icon">⌁</div>
-    <div class="benefit-title">Lightweight</div>
-    <div class="benefit-text">Effortless wear</div>
-  </div>
+ <div class="feature">
+   <div class="feature-icon">⌁</div>
+   <strong>Lightweight</strong>
+   <small>Effortless wear</small>
+ </div>
 
-  <div class="benefit">
-    <div class="benefit-icon">◇</div>
-    <div class="benefit-title">Non-See Through</div>
-    <div class="benefit-text">Complete coverage</div>
-  </div>
+ <div class="feature">
+   <div class="feature-icon">◇</div>
+   <strong>Non-See Through</strong>
+   <small>Complete coverage</small>
+ </div>
 
-  <div class="benefit">
-    <div class="benefit-icon">♢</div>
-    <div class="benefit-title">Silicone Grip</div>
-    <div class="benefit-text">Stays in place</div>
-  </div>
+ <div class="feature">
+   <div class="feature-icon">≈</div>
+   <strong>Silicone Grip</strong>
+   <small>Stays in place</small>
+ </div>
 
-  <div class="benefit">
-    <div class="benefit-icon">◯</div>
-    <div class="benefit-title">Premium Fabrics</div>
-    <div class="benefit-text">Made to last</div>
-  </div>
+ <div class="feature">
+   <div class="feature-icon">♢</div>
+   <strong>Premium Fabrics</strong>
+   <small>Made to last</small>
+ </div>
 
 </section>
 
 
-<!-- ======================================================
-     EDITORIAL 02
-     ====================================================== -->
+<!-- BLACK -->
 
-<section class="editorial left">
+<section class="editorial parallax-section">
 
-  <div class="editorial-content">
+ <div class="editorial-copy">
 
-    <div class="section-number">
-      02 <span class="section-line"></span>
-    </div>
+   <div class="number">02 ─────</div>
 
-    <div class="eyebrow">
-      CLASSIC JERSEY
-    </div>
+   <div class="eyebrow">CLASSIC JERSEY</div>
 
-    <h2>
-      Everyday<br>
-      Elegance.
-    </h2>
+   <h2>
+     Everyday<br>
+     Elegance.
+   </h2>
 
-    <p>
-      A soft, breathable jersey hijab designed
-      for comfort, style, and all-day wear.
-    </p>
+   <p>
+     A soft, breathable jersey hijab designed
+     for comfort, style, and all-day wear.
+   </p>
 
-    <a class="explore" href="#collection">
-      Explore →
-    </a>
+   <a class="explore" href="#collection">
+     Explore →
+   </a>
 
-  </div>
+ </div>
 
+ <img
+   class="editorial-image image-right parallax"
+   data-speed="0.18"
+   src="nurva-black-hijab.jpg"
+   alt="Classic black jersey hijab"
 
-  <img
-    src="black-hijab.png"
-    class="fabric"
-    data-speed="1"
-    alt="Classic Jersey Hijab"
-  >
 
 </section>
 
 
-<!-- ======================================================
-     EDITORIAL 03
-     ====================================================== -->
+<!-- CREAM -->
 
-<section class="editorial right">
+<section class="editorial parallax-section">
 
-  <div class="editorial-content">
+ <div class="editorial-copy" style="margin-left:auto;">
 
-    <div class="section-number">
-      03 <span class="section-line"></span>
-    </div>
+   <div class="number">03 ─────</div>
 
-    <div class="eyebrow">
-      SILK TOUCH
-    </div>
+   <div class="eyebrow">SILK TOUCH</div>
 
-    <h2>
-      Softness<br>
-      Redefined.
-    </h2>
+   <h2>
+     Softness<br>
+     Redefined.
+   </h2>
 
-    <p>
-      A silky, lightweight feel with a
-      beautiful natural drape.
-    </p>
+   <p>
+     A silky, lightweight feel with a beautiful
+     natural drape.
+   </p>
 
-    <a class="explore" href="#collection">
-      Explore →
-    </a>
+   <a class="explore" href="#collection">
+     Explore →
+   </a>
 
-  </div>
+ </div>
 
+ <img
+   class="editorial-image image-left parallax"
+   data-speed="-0.14"
+   src="nurva-cream-hijab.jpg"
+   alt="Cream silk touch hijab"
 
-  <img
-    src="cream-hijab.png"
-    class="fabric"
-    data-speed="2"
-    alt="Silk Touch Hijab"
-  >
 
 </section>
 
 
-<!-- ======================================================
-     EDITORIAL 04
-     ====================================================== -->
+<!-- TAUPE -->
 
-<section class="editorial left">
+<section class="editorial parallax-section">
 
-  <div class="editorial-content">
+ <div class="editorial-copy">
 
-    <div class="section-number">
-      04 <span class="section-line"></span>
-    </div>
+   <div class="number">04 ─────</div>
 
-    <div class="eyebrow">
-      PREMIUM MODAL
-    </div>
+   <div class="eyebrow">PREMIUM MODAL</div>
 
-    <h2>
-      Designed<br>
-      for You.
-    </h2>
+   <h2>
+     Designed<br>
+     for You.
+   </h2>
 
-    <p>
-      Lightweight, breathable, and crafted
-      for effortless beauty.
-    </p>
+   <p>
+     Lightweight, breathable, and crafted
+     for effortless beauty.
+   </p>
 
-    <a class="explore" href="#collection">
-      Explore →
-    </a>
+   <a class="explore" href="#collection">
+     Explore →
+   </a>
 
-  </div>
+ </div>
 
+ <img
+   class="editorial-image image-right parallax"
+   data-speed="0.22"
+   src="nurva-taupe-hijab.jpg"
+   alt="Premium taupe modal hijab"
 
-  <img
-    src="taupe-hijab.png"
-    class="fabric"
-    data-speed="3"
-    alt="Premium Modal Hijab"
-  >
 
 </section>
 
 
-<!-- ======================================================
-     EDITORIAL 05
-     ====================================================== -->
+<!-- BROWN -->
 
-<section class="editorial right">
+<section class="editorial parallax-section">
 
-  <div class="editorial-content">
+ <div class="editorial-copy" style="margin-left:auto;">
 
-    <div class="section-number">
-      05 <span class="section-line"></span>
-    </div>
+   <div class="number">05 ─────</div>
 
-    <div class="eyebrow">
-      EVERYDAY ESSENTIAL
-    </div>
+   <div class="eyebrow">EVERYDAY ESSENTIAL</div>
 
-    <h2>
-      Modest<br>
-      Made Simple.
-    </h2>
+   <h2>
+     Modest<br>
+     Made Simple.
+   </h2>
 
-    <p>
-      A versatile essential for every
-      moment, every outfit.
-    </p>
+   <p>
+     A versatile essential for every
+     moment, every outfit.
+   </p>
 
-    <a class="explore" href="#collection">
-      Explore →
-    </a>
+   <a class="explore" href="#collection">
+     Explore →
+   </a>
 
-  </div>
+ </div>
 
+ <img
+   class="editorial-image image-left parallax"
+   data-speed="-0.20"
+   src="nurva-brown-hijab.jpg"
+   alt="Everyday brown hijab"
 
-  <img
-    src="brown-hijab.png"
-    class="fabric"
-    data-speed="4"
-    alt="Everyday Essential Hijab"
-  >
 
 </section>
 
 
-<!-- ======================================================
-     COLLECTION
-     ====================================================== -->
+<!-- COLLECTION -->
 
-<section
-  class="collection"
-  id="collection"
->
+<section class="collection" id="collection">
 
-  <div class="collection-heading">
+ <div class="collection-head">
 
-    <div>
+   <div>
+     <div class="eyebrow">THE COLLECTION</div>
 
-      <div class="eyebrow">
-        THE COLLECTION
-      </div>
+     <h2>
+       Timeless Colors.<br>
+       Endless Possibilities.
+     </h2>
+   </div>
 
-      <h2>
-        Timeless Colors.<br>
-        Endless Possibilities.
-      </h2>
+   <p>
+     A curated collection of versatile hijabs
+     designed to complement every moment,
+     every outfit, every layer.
+   </p>
 
-    </div>
+ </div>
 
-    <p class="collection-description">
-      A curated collection of versatile hijabs
-      designed to complement every moment,
-      every outfit, every expression.
-    </p>
 
-  </div>
+ <div class="products">
 
+   <article class="product">
 
-  <div class="products">
+     <div class="product-image">
+       <img src="nurva-black-hijab.jpg" alt="Classic Jersey Hijab">
+     </div>
 
+     <div class="product-info">
+       <div>
+         <div class="product-name">Classic Jersey Hijab</div>
+         <div class="price">$24.00</div>
+       </div>
 
-    <!-- PRODUCT 1 -->
+       <div class="plus">+</div>
+     </div>
 
-    <article class="product-card">
+   </article>
 
-      <div class="product-image">
 
-        <img
-          src="black-hijab.png"
-          alt="Classic Jersey Hijab"
-        >
+   <article class="product">
 
-      </div>
+     <div class="product-image">
+       <img src="nurva-cream-hijab.jpg" alt="Silk Touch Hijab">
+     </div>
 
-      <div class="product-name">
-        Classic Jersey Hijab
-      </div>
+     <div class="product-info">
+       <div>
+         <div class="product-name">Silk Touch Hijab</div>
+         <div class="price">$26.00</div>
+       </div>
 
-      <div class="price">
-        $24.00
-      </div>
+       <div class="plus">+</div>
+     </div>
 
-      <div class="swatches">
+   </article>
 
-        <span
-          class="swatch"
-          style="background:#111"
-        ></span>
 
-        <span
-          class="swatch"
-          style="background:#6d625b"
-        ></span>
+   <article class="product">
 
-        <span
-          class="swatch"
-          style="background:#b6a79a"
-        ></span>
+     <div class="product-image">
+       <img src="nurva-taupe-hijab.jpg" alt="Premium Modal Hijab">
+     </div>
 
-      </div>
+     <div class="product-info">
+       <div>
+         <div class="product-name">Premium Modal Hijab</div>
+         <div class="price">$26.00</div>
+       </div>
 
-      <button
-        class="product-button"
-        onclick="addToCart('Classic Jersey Hijab')"
-      >
-        Add to Bag →
-      </button>
+       <div class="plus">+</div>
+     </div>
 
-    </article>
+   </article>
 
 
-    <!-- PRODUCT 2 -->
+   <article class="product">
 
-    <article class="product-card">
+     <div class="product-image">
+       <img src="nurva-brown-hijab.jpg" alt="Everyday Essential Hijab">
+     </div>
 
-      <div class="product-image">
+     <div class="product-info">
+       <div>
+         <div class="product-name">Everyday Essential Hijab</div>
+         <div class="price">$22.00</div>
+       </div>
 
-        <img
-          src="cream-hijab.png"
-          alt="Silk Touch Hijab"
-        >
+       <div class="plus">+</div>
+     </div>
 
-      </div>
+   </article>
 
-      <div class="product-name">
-        Silk Touch Hijab
-      </div>
-
-      <div class="price">
-        $26.00
-      </div>
-
-      <div class="swatches">
-
-        <span
-          class="swatch"
-          style="background:#eee8df"
-        ></span>
-
-        <span
-          class="swatch"
-          style="background:#d4c2b1"
-        ></span>
-
-        <span
-          class="swatch"
-          style="background:#a8917e"
-        ></span>
-
-      </div>
-
-      <button
-        class="product-button"
-        onclick="addToCart('Silk Touch Hijab')"
-      >
-        Add to Bag →
-      </button>
-
-    </article>
-
-
-    <!-- PRODUCT 3 -->
-
-    <article class="product-card">
-
-      <div class="product-image">
-
-        <img
-          src="taupe-hijab.png"
-          alt="Premium Modal Hijab"
-        >
-
-      </div>
-
-      <div class="product-name">
-        Premium Modal Hijab
-      </div>
-
-      <div class="price">
-        $26.00
-      </div>
-
-      <div class="swatches">
-
-        <span
-          class="swatch"
-          style="background:#806e64"
-        ></span>
-
-        <span
-          class="swatch"
-          style="background:#a58e84"
-        ></span>
-
-        <span
-          class="swatch"
-          style="background:#bd9995"
-        ></span>
-
-      </div>
-
-      <button
-        class="product-button"
-        onclick="addToCart('Premium Modal Hijab')"
-      >
-        Add to Bag →
-      </button>
-
-    </article>
-
-
-    <!-- PRODUCT 4 -->
-
-    <article class="product-card">
-
-      <div class="product-image">
-
-        <img
-          src="brown-hijab.png"
-          alt="Everyday Essential Hijab"
-        >
-
-      </div>
-
-      <div class="product-name">
-        Everyday Essential Hijab
-      </div>
-
-      <div class="price">
-        $22.00
-      </div>
-
-      <div class="swatches">
-
-        <span
-          class="swatch"
-          style="background:#171717"
-        ></span>
-
-        <span
-          class="swatch"
-          style="background:#69594f"
-        ></span>
-
-        <span
-          class="swatch"
-          style="background:#4d3024"
-        ></span>
-
-      </div>
-
-      <button
-        class="product-button"
-        onclick="addToCart('Everyday Essential Hijab')"
-      >
-        Add to Bag →
-      </button>
-
-    </article>
-
-  </div>
+ </div>
 
 </section>
 
 
-<!-- ======================================================
-     STORY
-     ====================================================== -->
+<!-- STORY -->
 
-<section
-  class="story"
-  id="story"
->
+<section class="story" id="story">
 
-  <div class="story-background"></div>
+ <img
+   class="story-image parallax"
+   data-speed="0.12"
+   src="nurva-hero-hijab.jpg"
+   alt="NŪRVĀ hijab"
 
-  <img
-    src="hero-hijab.png"
-    class="story-hijab"
-    id="storyHijab"
-    alt="NŪRVĀ Hijab"
-  >
 
-  <div class="story-content">
+ <div class="story-copy">
 
-    <div class="eyebrow">
-      OUR STORY
-    </div>
+   <div class="eyebrow">OUR STORY</div>
 
-    <h2>
-      More Than<br>
-      Just a Hijab.
-    </h2>
+   <h2>
+     More Than<br>
+     Just a Hijab.
+   </h2>
 
-    <p>
-      NŪRVĀ Hijabs was created with a simple vision —
-      to design hijabs that give you comfort,
-      confidence, and effortless style.
-    </p>
+   <p>
+     NŪRVĀ Hijabs was created with a simple vision —
+     to design hijabs that give you comfort,
+     confidence, and effortless style.
+   </p>
 
-    <p>
-      We believe modesty is not just a look.
-      It is a feeling.
-    </p>
+   <p>
+     We believe modesty is not just a look.
+     It is a feeling.
+   </p>
 
-    <a
-      class="explore"
-      href="#"
-    >
-      Discover NŪRVĀ →
-    </a>
+   <a class="explore" href="#">
+     Discover NŪRVĀ →
+   </a>
 
-  </div>
+ </div>
 
 </section>
 
 
-<!-- ======================================================
-     NEWSLETTER
-     ====================================================== -->
+<!-- NEWSLETTER -->
 
 <section class="newsletter">
 
-  <div class="eyebrow">
-    STAY CONNECTED
-  </div>
+ <div class="eyebrow">STAY CONNECTED</div>
 
-  <h2>
-    Join Our Journey
-  </h2>
+ <h2>Join Our Journey</h2>
 
-  <p>
-    Be the first to know about new arrivals,
-    exclusive offers, and more.
-  </p>
+ <p>
+   Be the first to know about new arrivals,
+   exclusive offers, and more.
+ </p>
 
-  <form
-    class="form"
-    onsubmit="subscribe(event)"
-  >
+ <form
+   class="form"
+   onsubmit="subscribe(event)"
 
-    <input
-      id="email"
-      type="email"
-      placeholder="Enter your email address"
-      required
-    >
 
-    <button>
-      Subscribe
-    </button>
+   <input
+     id="email"
+     type="email"
+     placeholder="Enter your email address"
+     required
 
-  </form>
+
+   <button type="submit">
+     Subscribe
+   </button>
+
+ </form>
 
 </section>
 
 
-<!-- ======================================================
-     FOOTER
-     ====================================================== -->
+<!-- FOOTER -->
 
 <footer>
 
-  <div>
+ <div>
+   <div class="footer-logo">NŪRVĀ</div>
+   <small>Confidence in Every Layer.</small>
+ </div>
 
-    <div class="footer-logo">
-      NŪRVĀ
-    </div>
+ <div class="footer-links">
+   <a href="#collection">Shop</a>
+   <a href="#story">About</a>
+   <a href="#">Contact</a>
+   <a href="#">Shipping</a>
+   <a href="#">Returns</a>
+ </div>
 
-    <div class="footer-tagline">
-      Confidence in Every Layer.
-    </div>
-
-  </div>
-
-  <div class="footer-links">
-
-    <a href="#collection">Shop</a>
-    <a href="#story">About</a>
-    <a href="#">Contact</a>
-    <a href="#">Shipping</a>
-    <a href="#">Returns</a>
-
-  </div>
-
-  <div class="copyright">
-    © 2026 NŪRVĀ HIJABS
-  </div>
+ <div>
+   © 2026 NŪRVĀ HIJABS
+ </div>
 
 </footer>
 
 
-<!-- ======================================================
-     CART
-     ====================================================== -->
+<!-- CART -->
 
 <div
-  class="drawer"
-  id="drawer"
-  onclick="closeOutside(event)"
->
+ class="cart"
+ id="cart"
+ onclick="closeCartOutside(event)"
 
-  <div class="cart">
 
-    <button
-      class="close"
-      onclick="closeCart()"
-    >
-      ×
-    </button>
+ <div class="cart-panel">
 
-    <h2>
-      Your Bag
-    </h2>
+   <button class="close" onclick="closeCart()">×</button>
 
-    <p id="cartText">
-      Your NŪRVĀ bag is empty.
-    </p>
+   <h2>Your Bag</h2>
 
-    <button
-      class="checkout"
-      onclick="checkout()"
-    >
-      Checkout
-    </button>
+   <p id="cartText">
+     Your NŪRVĀ bag is empty.
+   </p>
 
-  </div>
+   <button
+     class="checkout"
+     onclick="checkout()"
+
+     Checkout
+   </button>
+
+ </div>
 
 </div>
 
 
 <script>
 
-/* =========================================================
-   CART
-   ========================================================= */
+/* --------------------------------
+  APPLE-STYLE PARALLAX SCROLL
+-------------------------------- */
 
-let cartItems = [];
+const parallaxItems =
+document.querySelectorAll(".parallax");
 
-function addToCart(name){
+let ticking = false;
 
-  cartItems.push(name);
+function updateParallax(){
 
-  document.getElementById("cartNumber").textContent =
-    cartItems.length;
+ const scrollY = window.scrollY;
 
-  document.getElementById("cartText").textContent =
-    cartItems.length +
-    " item(s): " +
-    cartItems.join(", ");
+ parallaxItems.forEach((element)=>{
 
-  openCart();
+   const speed =
+     parseFloat(element.dataset.speed || "0.15");
+
+   const rect =
+     element.parentElement.getBoundingClientRect();
+
+   const center =
+     rect.top + rect.height / 2;
+
+   const viewportCenter =
+     window.innerHeight / 2;
+
+   const distance =
+     center - viewportCenter;
+
+   const movement =
+     distance * speed * -1;
+
+   element.style.transform =
+     `translate3d(0,${movement}px,0) scale(1.08)`;
+
+ });
+
+ /* Hero moves separately */
+
+ const hero =
+   document.getElementById("heroImg");
+
+ if(hero){
+
+   const heroMove =
+     Math.min(scrollY * .18,120);
+
+   hero.style.transform =
+     `translate3d(0,${heroMove}px,0) scale(1.08)`;
+
+ }
+
+ ticking=false;
 }
+
+function requestParallax(){
+
+ if(!ticking){
+
+   window.requestAnimationFrame(
+     updateParallax
+   );
+
+   ticking=true;
+
+ }
+
+}
+
+window.addEventListener(
+ "scroll",
+ requestParallax,
+ {passive:true}
+);
+
+window.addEventListener(
+ "resize",
+ requestParallax
+);
+
+updateParallax();
+
+
+/* --------------------------------
+  CART
+-------------------------------- */
 
 function openCart(){
 
-  document
-    .getElementById("drawer")
-    .classList
-    .add("open");
+ document
+   .getElementById("cart")
+   .classList.add("open");
 
 }
 
 function closeCart(){
 
-  document
-    .getElementById("drawer")
-    .classList
-    .remove("open");
+ document
+   .getElementById("cart")
+   .classList.remove("open");
 
 }
 
-function closeOutside(event){
+function closeCartOutside(event){
 
-  if(event.target.id === "drawer"){
-    closeCart();
-  }
+ if(event.target.id === "cart"){
 
-}
+   closeCart();
 
-function checkout(){
-
-  alert(
-    "NŪRVĀ checkout will be connected when your payment system is added."
-  );
+ }
 
 }
 
 
-/* =========================================================
-   NEWSLETTER
-   ========================================================= */
+/* --------------------------------
+  NEWSLETTER
+-------------------------------- */
 
 function subscribe(event){
 
-  event.preventDefault();
+ event.preventDefault();
 
-  const email =
-    document.getElementById("email").value;
+ const email =
+   document.getElementById("email").value;
 
-  alert(
-    "Thank you for joining NŪRVĀ!\n\n" +
-    email +
-    " has been added to our list."
-  );
+ alert(
+   "Thank you for joining NŪRVĀ!\n\n" +
+   email +
+   " has been added to our list."
+ );
 
-  document.getElementById("email").value = "";
-
-}
-
-
-/* =========================================================
-   APPLE-STYLE SCROLLING
-   ========================================================= */
-
-const heroHijab =
-  document.getElementById("heroHijab");
-
-const storyHijab =
-  document.getElementById("storyHijab");
-
-const fabrics =
-  document.querySelectorAll(".fabric");
-
-
-function clamp(value,min,max){
-
-  return Math.max(
-    min,
-    Math.min(max,value)
-  );
+ document.getElementById("email").value="";
 
 }
 
 
-function animateHijabs(){
+/* --------------------------------
+  CHECKOUT
+-------------------------------- */
 
-  const scroll =
-    window.scrollY;
+function checkout(){
 
-
-  /* -------------------------------------------------------
-     HERO
-     ------------------------------------------------------- */
-
-  if(heroHijab){
-
-    const heroHeight =
-      document.querySelector(".hero").offsetHeight;
-
-    const progress =
-      clamp(
-        scroll / heroHeight,
-        0,
-        1
-      );
-
-    const x =
-      progress * -180;
-
-    const y =
-      progress * 180;
-
-    const rotation =
-      progress * -8;
-
-    const scale =
-      1 + progress * .12;
-
-    heroHijab.style.setProperty(
-      "--hero-x",
-      x + "px"
-    );
-
-    heroHijab.style.setProperty(
-      "--hero-y",
-      y + "px"
-    );
-
-    heroHijab.style.setProperty(
-      "--hero-r",
-      rotation + "deg"
-    );
-
-    heroHijab.style.setProperty(
-      "--hero-scale",
-      scale
-    );
-
-  }
-
-
-  /* -------------------------------------------------------
-     EACH HIJAB MOVES DIFFERENTLY
-     ------------------------------------------------------- */
-
-  fabrics.forEach((fabric,index)=>{
-
-    const rect =
-      fabric.parentElement.getBoundingClientRect();
-
-    const viewport =
-      window.innerHeight;
-
-    const center =
-      rect.top + rect.height / 2;
-
-    const distance =
-      (viewport / 2 - center);
-
-    const speed =
-      parseFloat(
-        fabric.dataset.speed || "1"
-      );
-
-    const movement =
-      distance * 0.22 * speed;
-
-    const rotation =
-      distance * 0.006 * speed;
-
-    const scale =
-      1 + Math.abs(distance) / 6000;
-
-    fabric.style.transform =
-      `translate3d(0,${movement}px,0)
-       rotate(${rotation}deg)
-       scale(${scale})`;
-
-  });
-
-
-  /* -------------------------------------------------------
-     STORY HIJAB
-     ------------------------------------------------------- */
-
-  if(storyHijab){
-
-    const rect =
-      storyHijab.parentElement.getBoundingClientRect();
-
-    const distance =
-      window.innerHeight / 2 -
-      (rect.top + rect.height / 2);
-
-    const movement =
-      distance * .18;
-
-    const scale =
-      1 + Math.abs(distance) / 7000;
-
-    storyHijab.style.setProperty(
-      "--story-y",
-      movement + "px"
-    );
-
-    storyHijab.style.setProperty(
-      "--story-scale",
-      scale
-    );
-
-  }
+ alert(
+   "NŪRVĀ checkout is not connected yet.\n\n" +
+   "Once your payment system is connected, " +
+   "customers will be able to complete their purchase here."
+ );
 
 }
-
-
-/* =========================================================
-   REQUEST ANIMATION FRAME
-   ========================================================= */
-
-let ticking = false;
-
-function onScroll(){
-
-  if(!ticking){
-
-    window.requestAnimationFrame(()=>{
-
-      animateHijabs();
-
-      ticking = false;
-
-    });
-
-    ticking = true;
-
-  }
-
-}
-
-window.addEventListener(
-  "scroll",
-  onScroll,
-  {passive:true}
-);
-
-window.addEventListener(
-  "resize",
-  animateHijabs
-);
-
-animateHijabs();
 
 </script>
 
