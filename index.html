@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<meta name="theme-color" content="#eee7dc">
+
+<meta name="description"
+      content="NŪRVĀ HIJABS — Premium hijabs designed for comfort, elegance and effortless everyday styling.">
+
+<meta name="keywords"
+      content="NURVA Hijabs, hijabs, modest fashion, premium hijabs, silk hijabs, jersey hijabs, modal hijabs">
+
+<link rel="canonical" href="https://nurvahijabs.com/">
+
+<title>NŪRVĀ HIJABS — Confidence in Every Layer</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet">
+
+<style>
+
+/* =========================================================
+   NŪRVĀ HIJABS
+   GLOBAL
+========================================================= */
+
+:root {
+  --cream: #eee7dc;
+  --paper: #f7f3ec;
+  --white: #ffffff;
+  --ink: #171513;
+  --muted: #6d665e;
+  --line: rgba(23,21,19,.13);
+
+  --blue-light: #bfe8ff;
+  --blue-mid: #5bb7ee;
+  --blue-dark: #063a70;
+
+  --max-width: 1200px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+.container {
+  width: min(100% - 40px, var(--max-width));
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topbar {
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    #d7f2ff 0%,
+    #75c8f2 45%,
+    #147ac0 100%
+  );
+
+  color: white;
+  text-align: center;
+
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+
+  padding: 7px 12px;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  width: 100%;
+
+  background: rgba(247,243,236,.96);
+  backdrop-filter: blur(14px);
+
+  border-bottom: 1px solid var(--line);
+}
+
+.nav-inner {
+  min-height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.nav-left,
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-logo img {
+  width: 92px;
+  height: auto;
+  display: block;
+}
+
+.nav-link {
+  font-size: 12px;
+  letter-spacing: .04em;
+  transition: opacity .25s ease;
+}
+
+.nav-link:hover {
+  opacity: .55;
+}
+
+.menu-button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+.menu-button span {
+  width: 19px;
+  height: 1.5px;
+  background: var(--ink);
+  display: block;
+}
+
+.icon-button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  font-size: 19px;
+  line-height: 1;
+
+  transition: transform .2s ease;
+}
+
+.icon-button:hover {
+  transform: scale(1.08);
+}
+
+.cart-count {
+  font-size: 11px;
+  margin-left: -15px;
+  margin-top: -16px;
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+.mobile-menu {
+  display: none;
+
+  position: fixed;
+  z-index: 999;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100vh;
+
+  background: var(--paper);
+
+  padding: 110px 30px 40px;
+}
+
+.mobile-menu.active {
+  display: block;
+}
+
+.mobile-menu a {
+  display: block;
+
+  font-family: "Cormorant Garamond", serif;
+  font-size: 38px;
+
+  padding: 10px 0;
+
+  border-bottom: 1px solid var(--line);
+}
+
+.close-menu {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+
+  border: 0;
+  background: transparent;
+
+  font-size: 32px;
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+  padding: 82px 0 40px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.hero-copy {
+  max-width: 760px;
+}
+
+.eyebrow {
+  color: var(--muted);
+
+  font-size: 10px;
+  font-weight: 500;
+
+  letter-spacing: .22em;
+  text-transform: uppercase;
+
+  margin-bottom: 14px;
+}
+
+.hero h1 {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 500;
+
+  font-size: clamp(58px, 9vw, 105px);
+  line-height: .9;
+
+  letter-spacing: -.045em;
+
+  max-width: 800px;
+}
+
+.hero-text {
+  max-width: 560px;
+
+  color: var(--muted);
+
+  font-size: 14px;
+  line-height: 1.8;
+
+  margin-top: 26px;
+}
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--ink);
+  color: white;
+
+  padding: 15px 24px;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  letter-spacing: .08em;
+  text-transform: uppercase;
+
+  margin-top: 28px;
+
+  transition:
+    background .25s ease,
+    transform .25s ease;
+}
+
+.primary-button:hover {
+  background: #35312c;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   HERO PRODUCT IMAGE
+========================================================= */
+
+.hero-product {
+  width: 100%;
+  height: 620px;
+
+  margin-top: 58px;
+
+  overflow: hidden;
+
+  position: relative;
+
+  background:
+    linear-gradient(
+      135deg,
+      #dff5ff,
+      #75c9f1,
+      #0b487d
+    );
+}
+
+.hero-product img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  display: block;
+
+  transition: transform 1.2s cubic-bezier(.2,.65,.2,1);
+}
+
+.hero-product:hover img {
+  transform: scale(1.035);
+}
+
+
+/* =========================================================
+   FEATURED
+========================================================= */
+
+.featured {
+  padding: 100px 0;
+}
+
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-bottom: 30px;
+}
+
+.section-label {
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+
+  color: var(--muted);
+
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: clamp(45px, 6vw, 72px);
+
+  line-height: .9;
+  font-weight: 500;
+
+  letter-spacing: -.035em;
+}
+
+.view-all {
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+.products {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.product-card {
+  background: white;
+
+  overflow: hidden;
+
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.08);
+}
+
+.product-image {
+  display: block;
+
+  width: 100%;
+  aspect-ratio: 1 / 1.18;
+
+  overflow: hidden;
+
+  background: #eee7dc;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  transition: transform .7s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.035);
+}
+
+.product-info {
+  padding: 16px 14px 19px;
+}
+
+.product-name {
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: 21px;
+  line-height: 1.05;
+
+  margin-bottom: 5px;
+}
+
+.product-price {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+
+/* =========================================================
+   BRAND STORY
+========================================================= */
+
+.story {
+  padding: 100px 0;
+}
+
+.story-grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 70px;
+
+  align-items: center;
+}
+
+.story-image {
+  width: 100%;
+  aspect-ratio: 1 / 1.1;
+
+  overflow: hidden;
+
+  background: #e8e0d4;
+}
+
+.story-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+.story-copy {
+  max-width: 500px;
+}
+
+.story-copy h2 {
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: clamp(48px, 6vw, 76px);
+
+  font-weight: 500;
+  line-height: .92;
+
+  letter-spacing: -.035em;
+
+  margin-bottom: 24px;
+}
+
+.story-copy p {
+  color: var(--muted);
+
+  font-size: 14px;
+  line-height: 1.9;
+
+  margin-bottom: 16px;
+}
+
+
+/* =========================================================
+   NEWSLETTER
+========================================================= */
+
+.newsletter {
+  padding: 100px 0;
+
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+
+  text-align: center;
+}
+
+.newsletter h2 {
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: clamp(48px, 7vw, 82px);
+
+  font-weight: 500;
+
+  line-height: .92;
+
+  letter-spacing: -.04em;
+}
+
+.newsletter p {
+  color: var(--muted);
+
+  font-size: 13px;
+
+  max-width: 500px;
+
+  margin: 20px auto 30px;
+}
+
+.newsletter-form {
+  max-width: 520px;
+
+  margin: 0 auto;
+
+  display: flex;
+
+  border-bottom: 1px solid var(--ink);
+}
+
+.newsletter-form input {
+  flex: 1;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  padding: 15px 0;
+
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.newsletter-form button {
+  border: 0;
+  background: transparent;
+
+  cursor: pointer;
+
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+
+  padding: 15px 0 15px 20px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+  background:
+    linear-gradient(
+      180deg,
+      #d4f1ff 0%,
+      #68c1ed 38%,
+      #1385cb 68%,
+      #063b70 100%
+    );
+
+  color: white;
+
+  padding: 90px 0 25px;
+}
+
+.footer-grid {
+  display: grid;
+
+  grid-template-columns:
+    1.5fr 1fr 1fr 1fr;
+
+  gap: 50px;
+
+  padding-bottom: 70px;
+}
+
+.footer-brand {
+  max-width: 360px;
+}
+
+.footer-logo {
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: 58px;
+
+  line-height: .9;
+
+  letter-spacing: .08em;
+
+  margin-bottom: 15px;
+}
+
+.footer-tagline {
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: 18px;
+
+  margin-bottom: 30px;
+}
+
+.footer-column h3 {
+  font-size: 9px;
+
+  letter-spacing: .18em;
+
+  text-transform: uppercase;
+
+  margin-bottom: 18px;
+}
+
+.footer-column a {
+  display: block;
+
+  font-size: 11px;
+
+  margin-bottom: 11px;
+
+  opacity: .9;
+
+  transition: opacity .2s ease;
+}
+
+.footer-column a:hover {
+  opacity: .55;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.3);
+
+  padding-top: 20px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  font-size: 9px;
+
+  opacity: .85;
+}
+
+
+/* =========================================================
+   CART MESSAGE
+========================================================= */
+
+.cart-message {
+  position: fixed;
+
+  right: 20px;
+  bottom: 20px;
+
+  z-index: 2000;
+
+  background: var(--ink);
+  color: white;
+
+  padding: 14px 18px;
+
+  font-size: 12px;
+
+  opacity: 0;
+  transform: translateY(15px);
+
+  pointer-events: none;
+
+  transition:
+    opacity .3s ease,
+    transform .3s ease;
+}
+
+.cart-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .container {
+    width: min(100% - 24px, var(--max-width));
+  }
+
+  .nav-inner {
+    min-height: 62px;
+  }
+
+  .nav-logo img {
+    width: 82px;
+  }
+
+  .nav-left .nav-link,
+  .nav-right .nav-link {
+    display: none;
+  }
+
+  .hero {
+    padding: 48px 0 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(55px, 16vw, 88px);
+  }
+
+  .hero-text {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .hero-product {
+    height: 480px;
+    margin-top: 35px;
+  }
+
+  .featured {
+    padding: 70px 0;
+  }
+
+  .section-heading {
+    align-items: end;
+  }
+
+  .section-title {
+    font-size: 52px;
+  }
+
+  .products {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+
+  .product-info {
+    padding: 12px 10px 16px;
+  }
+
+  .product-name {
+    font-size: 18px;
+  }
+
+  .story {
+    padding: 70px 0;
+  }
+
+  .story-grid {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .story-copy {
+    max-width: none;
+  }
+
+  .newsletter {
+    padding: 70px 0;
+  }
+
+  .footer {
+    padding-top: 70px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 45px 30px;
+
+    padding-bottom: 50px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .topbar {
+    font-size: 7px;
+    letter-spacing: .1em;
+  }
+
+  .nav-logo img {
+    width: 75px;
+  }
+
+  .hero h1 {
+    font-size: 55px;
+  }
+
+  .hero-product {
+    height: 390px;
+  }
+
+  .section-title {
+    font-size: 47px;
+  }
+
+  .products {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-name {
+    font-size: 17px;
+  }
+
+  .product-price {
+    font-size: 10px;
+  }
+
+  .footer-logo {
+    font-size: 50px;
+  }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
+
+<div class="topbar">
+  Free shipping on orders over $75 &nbsp; • &nbsp; Ships worldwide
+</div>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<header class="nav">
+
+  <div class="container nav-inner">
+
+    <div class="nav-left">
+
+      <button
+        class="menu-button"
+        id="menuButton"
+        aria-label="Open menu">
+
+        <span></span>
+        <span></span>
+        <span></span>
+
+      </button>
+
+      <a href="#collection" class="nav-link">
+        Shop
+      </a>
+
+      <a href="#story" class="nav-link">
+        Our Story
+      </a>
+
+    </div>
+
+
+    <a href="/" class="nav-logo" aria-label="NŪRVĀ HIJABS">
+
+      <img
+        src="nurva-logo.png"
+        alt="NŪRVĀ HIJABS logo">
+
+    </a>
+
+
+    <div class="nav-right">
+
+      <a
+        href="https://www.instagram.com/nurvahijabs/"
+        target="_blank"
+        rel="noopener"
+        class="nav-link">
+
+        Instagram
+
+      </a>
+
+      <button
+        class="icon-button"
+        id="cartButton"
+        aria-label="Shopping bag">
+
+        ♡
+
+      </button>
+
+      <span class="cart-count" id="cartCount">
+        0
+      </span>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+<!-- =====================================================
+     MOBILE MENU
+===================================================== -->
+
+<div class="mobile-menu" id="mobileMenu">
+
+  <button
+    class="close-menu"
+    id="closeMenu"
+    aria-label="Close menu">
+
+    ×
+
+  </button>
+
+  <a href="#collection" class="mobile-link">
+    Shop Collection
+  </a>
+
+  <a href="#story" class="mobile-link">
+    Our Story
+  </a>
+
+  <a href="#newsletter" class="mobile-link">
+    Join NŪRVĀ
+  </a>
+
+  <a
+    href="https://www.instagram.com/nurvahijabs/"
+    target="_blank"
+    rel="noopener">
+
+    Instagram
+
+  </a>
+
+  <a href="mailto:Enquire@nurvahijabs.com">
+    Email Us
+  </a>
+
+</div>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<main>
+
+<section class="hero">
+
+  <div class="container">
+
+    <div class="hero-grid">
+
+      <div class="hero-copy">
+
+        <div class="eyebrow">
+          NŪRVĀ HIJABS
+        </div>
+
+        <h1>
+          Confidence in Every Layer.
+        </h1>
+
+        <p class="hero-text">
+          Premium hijabs designed for comfort,
+          elegance and effortless everyday styling.
+          Lightweight. Breathable. Made to move with you.
+        </p>
+
+        <a
+          href="#collection"
+          class="primary-button">
+
+          Shop Collection
+
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- REAL HIJAB HERO IMAGE -->
+
+    <div class="hero-product">
+
+      <img
+        src="nurva-hero-hijab.jpg"
+        alt="NŪRVĀ premium hijab"
+        loading="eager">
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     FEATURED COLLECTION
+===================================================== -->
+
+<section
+  class="featured"
+  id="collection">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <div>
+
+        <div class="section-label">
+          Featured
+        </div>
+
+        <h2 class="section-title">
+          Everyday<br>
+          Essentials
+        </h2>
+
+      </div>
+
+      <a
+        href="#collection"
+        class="view-all">
+
+        View All
+
+      </a>
+
+    </div>
+
+
+    <div class="products">
+
+
+      <!-- PRODUCT 1 -->
+
+      <article class="product-card">
+
+        <a
+          href="#"
+          class="product-image"
+          onclick="addToCart('Classic Jersey Hijab'); return false;">
+
+          <img
+            src="classic-jersey-hijab.jpg"
+            alt="Classic Jersey Hijab"
+            loading="lazy">
+
+        </a>
+
+        <div class="product-info">
+
+          <h3 class="product-name">
+            Classic Jersey Hijab
+          </h3>
+
+          <p class="product-price">
+            $25.00
+          </p>
+
+        </div>
+
+      </article>
+
+
+      <!-- PRODUCT 2 -->
+
+      <article class="product-card">
+
+        <a
+          href="#"
+          class="product-image"
+          onclick="addToCart('Silk Touch Hijab'); return false;">
+
+          <img
+            src="silk-touch-hijab.jpg"
+            alt="Silk Touch Hijab"
+            loading="lazy">
+
+        </a>
+
+        <div class="product-info">
+
+          <h3 class="product-name">
+            Silk Touch Hijab
+          </h3>
+
+          <p class="product-price">
+            $42.99
+          </p>
+
+        </div>
+
+      </article>
+
+
+      <!-- PRODUCT 3 -->
+
+      <article class="product-card">
+
+        <a
+          href="#"
+          class="product-image"
+          onclick="addToCart('Premium Modal Hijab'); return false;">
+
+          <img
+            src="premium-modal-hijab.jpg"
+            alt="Premium Modal Hijab"
+            loading="lazy">
+
+        </a>
+
+        <div class="product-info">
+
+          <h3 class="product-name">
+            Premium Modal Hijab
+          </h3>
+
+          <p class="product-price">
+            $35.99
+          </p>
+
+        </div>
+
+      </article>
+
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     OUR STORY
+===================================================== -->
+
+<section
+  class="story"
+  id="story">
+
+  <div class="container">
+
+    <div class="story-grid">
+
+
+      <div class="story-image">
+
+        <img
+          src="nurva-hero-hijab.jpg"
+          alt="NŪRVĀ hijab collection"
+          loading="lazy">
+
+      </div>
+
+
+      <div class="story-copy">
+
+        <div class="eyebrow">
+          The NŪRVĀ Story
+        </div>
+
+        <h2>
+          Made for<br>
+          every layer.
+        </h2>
+
+        <p>
+          NŪRVĀ was created around a simple idea:
+          modesty should never mean compromising
+          comfort, confidence or personal style.
+        </p>
+
+        <p>
+          Every piece is designed with everyday
+          movement in mind — from lightweight
+          fabrics to thoughtful details that help
+          you feel comfortable throughout your day.
+        </p>
+
+        <a
+          href="mailto:Enquire@nurvahijabs.com"
+          class="primary-button">
+
+          Learn More
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     NEWSLETTER
+===================================================== -->
+
+<section
+  class="newsletter"
+  id="newsletter">
+
+  <div class="container">
+
+    <div class="eyebrow">
+      Stay Connected
+    </div>
+
+    <h2>
+      Be the first<br>
+      to know.
+    </h2>
+
+    <p>
+      Join the NŪRVĀ community for new
+      collections, restocks and upcoming releases.
+    </p>
+
+
+    <form
+      class="newsletter-form"
+      action="mailto:Enquire@nurvahijabs.com"
+      method="post"
+      enctype="text/plain">
+
+      <input
+        type="email"
+        name="Email"
+        placeholder="Your email address"
+        required>
+
+      <button type="submit">
+        Join
+      </button>
+
+    </form>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+  <div class="container">
+
+    <div class="footer-grid">
+
+
+      <div class="footer-brand">
+
+        <div class="footer-logo">
+          NŪRVĀ
+        </div>
+
+        <div class="footer-tagline">
+          Confidence in Every Layer.
+        </div>
+
+        <a
+          href="mailto:Enquire@nurvahijabs.com"
+          class="footer-column">
+
+          Enquire@nurvahijabs.com
+
+        </a>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h3>
+          Shop
+        </h3>
+
+        <a href="#collection">
+          All Hijabs
+        </a>
+
+        <a href="#collection">
+          New Arrivals
+        </a>
+
+        <a href="#collection">
+          Summer
+        </a>
+
+        <a href="#collection">
+          Fall
+        </a>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h3>
+          About
+        </h3>
+
+        <a href="#story">
+          Our Story
+        </a>
+
+        <a href="#newsletter">
+          Shipping
+        </a>
+
+        <a href="mailto:Enquire@nurvahijabs.com">
+          Contact
+        </a>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h3>
+          Connect
+        </h3>
+
+        <a href="mailto:Enquire@nurvahijabs.com">
+          Email Us
+        </a>
+
+        <a
+          href="https://www.instagram.com/nurvahijabs/"
+          target="_blank"
+          rel="noopener">
+
+          Instagram
+
+        </a>
+
+      </div>
+
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+      <span>
+        © 2026 NŪRVĀ HIJABS
+      </span>
+
+      <span>
+        Confidence in Every Layer.
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+<!-- =====================================================
+     CART MESSAGE
+===================================================== -->
+
+<div
+  class="cart-message"
+  id="cartMessage">
+
+  Added to your bag.
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+/* ========================================================
+   MOBILE MENU
+======================================================== */
+
+const menuButton =
+  document.getElementById("menuButton");
+
+const closeMenu =
+  document.getElementById("closeMenu");
+
+const mobileMenu =
+  document.getElementById("mobileMenu");
+
+
+menuButton.addEventListener("click", () => {
+
+  mobileMenu.classList.add("active");
+
+});
+
+
+closeMenu.addEventListener("click", () => {
+
+  mobileMenu.classList.remove("active");
+
+});
+
+
+document.querySelectorAll(".mobile-link").forEach(link => {
+
+  link.addEventListener("click", () => {
+
+    mobileMenu.classList.remove("active");
+
+  });
+
+});
+
+
+/* ========================================================
+   CART
+======================================================== */
+
+let cartCount = 0;
+
+const cartCounter =
+  document.getElementById("cartCount");
+
+const cartMessage =
+  document.getElementById("cartMessage");
+
+
+function addToCart(productName) {
+
+  cartCount++;
+
+  cartCounter.textContent = cartCount;
+
+  cartMessage.textContent =
+    productName + " added to your bag.";
+
+  cartMessage.classList.add("show");
+
+
+  setTimeout(() => {
+
+    cartMessage.classList.remove("show");
+
+  }, 2200);
+
+}
+
+
+/* ========================================================
+   CART BUTTON
+======================================================== */
+
+document
+  .getElementById("cartButton")
+  .addEventListener("click", () => {
+
+    if (cartCount === 0) {
+
+      cartMessage.textContent =
+        "Your bag is empty.";
+
+    } else {
+
+      cartMessage.textContent =
+        "You have " + cartCount +
+        " item" +
+        (cartCount === 1 ? "" : "s") +
+        " in your bag.";
+
+    }
+
+    cartMessage.classList.add("show");
+
+
+    setTimeout(() => {
+
+      cartMessage.classList.remove("show");
+
+    }, 2200);
+
+  });
+
+
+/* ========================================================
+   SIMPLE SCROLL EFFECT
+======================================================== */
+
+const heroImage =
+  document.querySelector(".hero-product img");
+
+
+window.addEventListener("scroll", () => {
+
+  if (!heroImage) return;
+
+  const scroll =
+    window.scrollY;
+
+  if (window.innerWidth > 700) {
+
+    heroImage.style.transform =
+      "scale(" +
+      (1 + Math.min(scroll / 7000, .035)) +
+      ")";
+
+  }
+
+});
+
+
+</script>
+
+</body>
+</html>
