@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NURVA HIJABS — Confidence in Every Layer</title>
+
+<meta name="description"
+content="NURVA HIJABS — premium, lightweight and elegant hijabs designed for confidence in every layer.">
+
+<meta name="theme-color" content="#eef7ff">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --white:#ffffff;
+  --paper:#faf9f6;
+  --ink:#171515;
+  --muted:#77736d;
+  --line:rgba(23,21,21,.12);
+  --champagne:#9a7b5c;
+
+  --blue-light:#eef8ff;
+  --blue:#79c8ff;
+  --blue-mid:#268fe0;
+  --blue-dark:#071b3d;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:"DM Sans",sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.5;
+}
+
+button,
+input{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar{
+  background:#171515;
+  color:white;
+  text-align:center;
+  font-size:11px;
+  letter-spacing:.12em;
+  padding:9px 15px;
+  text-transform:uppercase;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:rgba(250,249,246,.94);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+}
+
+.nav{
+  height:76px;
+  max-width:1400px;
+  margin:auto;
+  padding:0 28px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
+}
+
+.logo{
+  font-family:"Playfair Display",serif;
+  font-size:30px;
+  letter-spacing:.12em;
+  font-weight:500;
+  white-space:nowrap;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:30px;
+}
+
+.nav-links button{
+  background:none;
+  border:0;
+  font-size:13px;
+  color:var(--ink);
+  transition:.2s;
+}
+
+.nav-links button:hover{
+  opacity:.5;
+}
+
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.icon-btn{
+  border:0;
+  background:none;
+  font-size:19px;
+  width:35px;
+  height:35px;
+}
+
+.cart-count{
+  font-size:12px;
+  margin-left:-8px;
+}
+
+/* MOBILE MENU */
+
+.menu-btn{
+  display:none;
+  border:0;
+  background:none;
+  font-size:24px;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-box{
+  display:none;
+  max-width:1400px;
+  margin:auto;
+  padding:15px 28px;
+  border-top:1px solid var(--line);
+}
+
+.search-box.active{
+  display:block;
+}
+
+.search-box input{
+  width:100%;
+  border:1px solid var(--line);
+  background:white;
+  padding:15px 18px;
+  outline:none;
+  font-size:14px;
+}
+
+/* =========================
+   APP VIEWS
+========================= */
+
+main{
+  min-height:60vh;
+}
+
+.view{
+  display:none;
+}
+
+.view.active{
+  display:block;
+}
+
+/* =========================
+   HOME
+========================= */
+
+.hero{
+  min-height:620px;
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  align-items:center;
+  gap:50px;
+
+  max-width:1400px;
+  margin:auto;
+  padding:70px 7%;
+}
+
+.hero-copy{
+  max-width:600px;
+}
+
+.eyebrow{
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:20px;
+}
+
+.hero h1{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(48px,6vw,88px);
+  line-height:.98;
+  font-weight:400;
+  margin-bottom:25px;
+}
+
+.hero p{
+  color:var(--muted);
+  max-width:520px;
+  font-size:16px;
+  margin-bottom:30px;
+}
+
+.btn{
+  border:1px solid var(--ink);
+  background:var(--ink);
+  color:white;
+  padding:14px 24px;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  transition:.25s;
+}
+
+.btn:hover{
+  background:white;
+  color:var(--ink);
+}
+
+.btn.light{
+  background:white;
+  color:var(--ink);
+  border-color:white;
+}
+
+.hero-image{
+  min-height:500px;
+  background:
+    linear-gradient(
+      145deg,
+      #edf7ff,
+      #bfe6ff 45%,
+      #4ba8e8 72%,
+      #071b3d
+    );
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.hero-image img{
+  width:75%;
+  max-height:520px;
+  object-fit:contain;
+  transition:transform .6s ease;
+}
+
+.hero-image:hover img{
+  transform:scale(1.05);
+}
+
+/* =========================
+   HOME FEATURED
+========================= */
+
+.section{
+  max-width:1400px;
+  margin:auto;
+  padding:65px 7%;
+}
+
+.section-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  margin-bottom:30px;
+  gap:20px;
+}
+
+.section-title{
+  font-family:"Playfair Display",serif;
+  font-size:42px;
+  font-weight:400;
+}
+
+.text-btn{
+  background:none;
+  border:0;
+  border-bottom:1px solid var(--ink);
+  padding-bottom:4px;
+}
+
+/* =========================
+   PRODUCT GRID
+========================= */
+
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+
+.product-card{
+  background:white;
+  cursor:pointer;
+  transition:transform .25s ease;
+}
+
+.product-card:hover{
+  transform:translateY(-5px);
+}
+
+.product-image{
+  aspect-ratio:4/5;
+  overflow:hidden;
+  background:#eee;
+  position:relative;
+}
+
+.product-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform .5s ease;
+}
+
+.product-card:hover img{
+  transform:scale(1.04);
+}
+
+.product-info{
+  padding:17px 4px 25px;
+}
+
+.product-name{
+  font-size:14px;
+  margin-bottom:5px;
+}
+
+.product-price{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.status{
+  position:absolute;
+  top:12px;
+  left:12px;
+  background:white;
+  padding:7px 10px;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+/* =========================
+   SHOP
+========================= */
+
+.shop-header{
+  max-width:1400px;
+  margin:auto;
+  padding:60px 7% 25px;
+}
+
+.shop-header h1{
+  font-family:"Playfair Display",serif;
+  font-size:60px;
+  font-weight:400;
+}
+
+.filters{
+  max-width:1400px;
+  margin:auto;
+  padding:10px 7% 35px;
+
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.filter{
+  border:1px solid var(--line);
+  background:white;
+  padding:11px 17px;
+  font-size:12px;
+}
+
+.filter.active{
+  background:var(--ink);
+  color:white;
+}
+
+/* =========================
+   COLLECTIONS
+========================= */
+
+.collection-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+.collection-card{
+  min-height:280px;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+
+  display:flex;
+  align-items:flex-end;
+  padding:30px;
+
+  color:white;
+  background:linear-gradient(135deg,#eaf7ff,#3e9fe0,#071b3d);
+}
+
+.collection-card:nth-child(2){
+  background:linear-gradient(135deg,#f5eee7,#b69a83,#3a2c25);
+}
+
+.collection-card:nth-child(3){
+  background:linear-gradient(135deg,#f5f5f5,#a7a7a7,#292929);
+}
+
+.collection-card:nth-child(4){
+  background:linear-gradient(135deg,#e8edf2,#8094aa,#172535);
+}
+
+.collection-card h2{
+  font-family:"Playfair Display",serif;
+  font-size:38px;
+  font-weight:400;
+}
+
+/* =========================
+   STORY
+========================= */
+
+.story{
+  max-width:1000px;
+  margin:auto;
+  padding:90px 7%;
+  text-align:center;
+}
+
+.story h1{
+  font-family:"Playfair Display",serif;
+  font-size:65px;
+  font-weight:400;
+  margin-bottom:30px;
+}
+
+.story p{
+  color:var(--muted);
+  max-width:720px;
+  margin:0 auto 20px;
+  font-size:17px;
+}
+
+/* =========================
+   INFO CARDS
+========================= */
+
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.info-card{
+  background:white;
+  padding:35px;
+  border:1px solid var(--line);
+}
+
+.info-card h3{
+  font-family:"Playfair Display",serif;
+  font-size:25px;
+  margin-bottom:12px;
+}
+
+.info-card p{
+  color:var(--muted);
+  font-size:14px;
+}
+
+/* =========================
+   PRODUCT MODAL
+========================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:2000;
+
+  display:none;
+  align-items:center;
+  justify-content:center;
+
+  padding:20px;
+}
+
+.modal.active{
+  display:flex;
+}
+
+.modal-content{
+  background:white;
+  max-width:900px;
+  width:100%;
+  max-height:90vh;
+  overflow:auto;
+
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  position:relative;
+}
+
+.modal-image{
+  min-height:500px;
+  background:#f1f1f1;
+}
+
+.modal-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.modal-info{
+  padding:45px;
+}
+
+.modal-info h2{
+  font-family:"Playfair Display",serif;
+  font-size:42px;
+  font-weight:400;
+  margin-bottom:10px;
+}
+
+.modal-info .price{
+  font-size:17px;
+  margin-bottom:25px;
+}
+
+.modal-info p{
+  color:var(--muted);
+  margin-bottom:25px;
+}
+
+.close{
+  position:absolute;
+  top:15px;
+  right:15px;
+  z-index:5;
+
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:50%;
+  background:white;
+  font-size:20px;
+}
+
+/* =========================
+   CART
+========================= */
+
+.cart-panel{
+  position:fixed;
+  top:0;
+  right:-430px;
+  width:420px;
+  max-width:92%;
+  height:100vh;
+
+  background:white;
+  z-index:3000;
+
+  padding:30px;
+
+  box-shadow:-10px 0 30px rgba(0,0,0,.12);
+
+  transition:right .35s ease;
+}
+
+.cart-panel.active{
+  right:0;
+}
+
+.cart-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-bottom:25px;
+  border-bottom:1px solid var(--line);
+}
+
+.cart-head h2{
+  font-family:"Playfair Display",serif;
+  font-size:30px;
+  font-weight:400;
+}
+
+.cart-items{
+  padding:25px 0;
+  color:var(--muted);
+}
+
+.cart-total{
+  border-top:1px solid var(--line);
+  padding-top:20px;
+  display:flex;
+  justify-content:space-between;
+}
+
+/* =========================
+   BLUE NURVA FOOTER
+========================= */
+
+.blue-footer{
+  margin-top:70px;
+  padding:90px 7% 35px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f1faff 0%,
+      #a9dcff 24%,
+      #4da9e8 55%,
+      #166cb7 75%,
+      #071b3d 100%
+    );
+
+  color:white;
+}
+
+.footer-main{
+  max-width:1400px;
+  margin:auto;
+
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1fr 1fr;
+  gap:50px;
+}
+
+.footer-brand{
+  font-family:"Playfair Display",serif;
+  font-size:76px;
+  font-weight:400;
+  letter-spacing:.08em;
+  line-height:1;
+}
+
+.footer-tagline{
+  margin-top:18px;
+  font-size:14px;
+  opacity:.9;
+}
+
+.footer-column h4{
+  font-size:11px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+
+.footer-column button,
+.footer-column a{
+  display:block;
+  color:white;
+  background:none;
+  border:0;
+  padding:5px 0;
+  font-size:13px;
+  opacity:.9;
+}
+
+.footer-column button:hover,
+.footer-column a:hover{
+  opacity:1;
+  text-decoration:underline;
+}
+
+.footer-bottom{
+  max-width:1400px;
+  margin:70px auto 0;
+
+  padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.3);
+
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+
+  font-size:11px;
+  opacity:.8;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+  .nav{
+    height:65px;
+    padding:0 18px;
+  }
+
+  .logo{
+    font-size:24px;
+  }
+
+  .nav-links{
+    display:none;
+    position:absolute;
+    top:65px;
+    left:0;
+    right:0;
+
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+
+    padding:20px;
+
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .nav-links.active{
+    display:flex;
+  }
+
+  .menu-btn{
+    display:block;
+  }
+
+  .nav-actions{
+    margin-left:auto;
+  }
+
+  .hero{
+    grid-template-columns:1fr;
+    padding:45px 20px;
+  }
+
+  .hero h1{
+    font-size:52px;
+  }
+
+  .hero-image{
+    min-height:400px;
+  }
+
+  .section{
+    padding:50px 20px;
+  }
+
+  .product-grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+  }
+
+  .collection-grid{
+    grid-template-columns:1fr;
+  }
+
+  .info-grid{
+    grid-template-columns:1fr;
+  }
+
+  .shop-header{
+    padding:45px 20px 20px;
+  }
+
+  .shop-header h1{
+    font-size:48px;
+  }
+
+  .story{
+    padding:65px 20px;
+  }
+
+  .story h1{
+    font-size:48px;
+  }
+
+  .modal-content{
+    grid-template-columns:1fr;
+    max-height:92vh;
+  }
+
+  .modal-image{
+    min-height:330px;
+  }
+
+  .modal-info{
+    padding:30px;
+  }
+
+  .modal-info h2{
+    font-size:34px;
+  }
+
+  .footer-main{
+    grid-template-columns:1fr 1fr;
+    gap:35px;
+  }
+
+  .footer-brand{
+    font-size:54px;
+    grid-column:1/-1;
+  }
+
+  .footer-bottom{
+    flex-direction:column;
+    margin-top:50px;
+  }
+}
+
+@media(max-width:500px){
+
+  .product-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .product-info{
+    padding:12px 2px 20px;
+  }
+
+  .product-name{
+    font-size:12px;
+  }
+
+  .product-price{
+    font-size:11px;
+  }
+
+  .hero h1{
+    font-size:44px;
+  }
+
+  .footer-main{
+    grid-template-columns:1fr;
+  }
+
+  .footer-brand{
+    grid-column:auto;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  Free shipping on orders over $75 · Ships worldwide
+</div>
+
+<!-- HEADER -->
+<header>
+
+  <nav class="nav">
+
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <button class="logo" onclick="showView('home')">
+      NURVA
+    </button>
+
+    <div class="nav-links" id="navLinks">
+
+      <button onclick="showView('home')">
+        Home
+      </button>
+
+      <button onclick="showView('shop')">
+        Shop
+      </button>
+
+      <button onclick="showView('collections')">
+        Collections
+      </button>
+
+      <button onclick="showView('story')">
+        Our Story
+      </button>
+
+      <button onclick="showView('shipping')">
+        Shipping
+      </button>
+
+    </div>
+
+    <div class="nav-actions">
+
+      <button class="icon-btn" onclick="toggleSearch()">
+        ⌕
+      </button>
+
+      <button class="icon-btn" onclick="openCart()">
+        ♡
+      </button>
+
+      <button class="icon-btn" onclick="openCart()">
+        🛍
+      </button>
+
+      <span class="cart-count" id="cartCount">0</span>
+
+    </div>
+
+  </nav>
+
+  <div class="search-box" id="searchBox">
+
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Search NURVA..."
+      oninput="searchProducts()"
+    >
+
+  </div>
+
+</header>
+
+
+<main>
+
+<!-- =========================
+     HOME
+========================= -->
+
+<section class="view active" id="homeView">
+
+  <div class="hero">
+
+    <div class="hero-copy">
+
+      <div class="eyebrow">
+        NURVA HIJABS
+      </div>
+
+      <h1>
+        Confidence in Every Layer.
+      </h1>
+
+      <p>
+        Premium hijabs designed for comfort, elegance and effortless everyday styling.
+        Lightweight. Breathable. Made to move with you.
+      </p>
+
+      <button class="btn" onclick="showView('shop')">
+        Shop Collection
+      </button>
+
+    </div>
+
+    <div class="hero-image">
+
+      <!-- Replace with your preferred hero hijab image -->
+      <img
+        src="hero-hijab.jpg"
+        alt="NURVA hijab"
+      >
+
+    </div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="section-head">
+
+      <div>
+        <div class="eyebrow">
+          Featured
+        </div>
+
+        <h2 class="section-title">
+          Everyday Essentials
+        </h2>
+      </div>
+
+      <button
+        class="text-btn"
+        onclick="showView('shop')"
+      >
+        View All
+      </button>
+
+    </div>
+
+    <div class="product-grid" id="featuredProducts"></div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     SHOP
+========================= -->
+
+<section class="view" id="shopView">
+
+  <div class="shop-header">
+
+    <div class="eyebrow">
+      NURVA COLLECTION
+    </div>
+
+    <h1>
+      Shop
+    </h1>
+
+  </div>
+
+  <div class="filters">
+
+    <button
+      class="filter active"
+      onclick="filterCollection('all',this)"
+    >
+      All
+    </button>
+
+    <button
+      class="filter"
+      onclick="filterCollection('new',this)"
+    >
+      New Arrivals
+    </button>
+
+    <button
+      class="filter"
+      onclick="filterCollection('summer',this)"
+    >
+      Summer
+    </button>
+
+    <button
+      class="filter"
+      onclick="filterCollection('fall',this)"
+    >
+      Fall
+    </button>
+
+    <button
+      class="filter"
+      onclick="filterCollection('winter',this)"
+    >
+      Winter
+    </button>
+
+    <button
+      class="filter"
+      onclick="filterCollection('spring',this)"
+    >
+      Spring
+    </button>
+
+    <button
+      class="filter"
+      onclick="filterCollection('coming',this)"
+    >
+      Coming Soon
+    </button>
+
+  </div>
+
+  <div class="section">
+
+    <div class="product-grid" id="shopProducts"></div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     COLLECTIONS
+========================= -->
+
+<section class="view" id="collectionsView">
+
+  <div class="section">
+
+    <div class="eyebrow">
+      Explore
+    </div>
+
+    <h1 class="section-title">
+      Collections
+    </h1>
+
+    <br>
+
+    <div class="collection-grid">
+
+      <div
+        class="collection-card"
+        onclick="openCollection('new')"
+      >
+        <h2>New Arrivals</h2>
+      </div>
+
+      <div
+        class="collection-card"
+        onclick="openCollection('summer')"
+      >
+        <h2>Summer</h2>
+      </div>
+
+      <div
+        class="collection-card"
+        onclick="openCollection('fall')"
+      >
+        <h2>Fall</h2>
+      </div>
+
+      <div
+        class="collection-card"
+        onclick="openCollection('winter')"
+      >
+        <h2>Winter</h2>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     STORY
+========================= -->
+
+<section class="view" id="storyView">
+
+  <div class="story">
+
+    <div class="eyebrow">
+      NURVA HIJABS
+    </div>
+
+    <h1>
+      Confidence in Every Layer.
+    </h1>
+
+    <p>
+      NURVA was created around a simple idea:
+      a hijab should feel as good as it looks.
+    </p>
+
+    <p>
+      Our collections focus on premium materials,
+      comfortable coverage, breathable construction
+      and timeless styling.
+    </p>
+
+    <p>
+      Every layer is designed to help you feel
+      comfortable, confident and effortlessly yourself.
+    </p>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     SHIPPING
+========================= -->
+
+<section class="view" id="shippingView">
+
+  <div class="section">
+
+    <div class="eyebrow">
+      Customer Care
+    </div>
+
+    <h1 class="section-title">
+      Shipping & Delivery
+    </h1>
+
+    <br><br>
+
+    <div class="info-grid">
+
+      <div class="info-card">
+
+        <h3>
+          Free Shipping
+        </h3>
+
+        <p>
+          Enjoy free shipping on orders over $75.
+        </p>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>
+          Worldwide
+        </h3>
+
+        <p>
+          NURVA ships worldwide so you can shop
+          from wherever you are.
+        </p>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>
+          Order Support
+        </h3>
+
+        <p>
+          Questions about an order?
+          Contact us at
+          Enquire@nurvahijabs.com
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- =========================
+     BLUE FOOTER
+========================= -->
+
+<footer class="blue-footer">
+
+  <div class="footer-main">
+
+    <div>
+
+      <div class="footer-brand">
+        NURVA
+      </div>
+
+      <div class="footer-tagline">
+        Confidence in Every Layer.
+      </div>
+
+    </div>
+
+
+    <div class="footer-column">
+
+      <h4>Shop</h4>
+
+      <button onclick="showView('shop')">
+        All Hijabs
+      </button>
+
+      <button onclick="openCollection('new')">
+        New Arrivals
+      </button>
+
+      <button onclick="openCollection('summer')">
+        Summer
+      </button>
+
+      <button onclick="openCollection('fall')">
+        Fall
+      </button>
+
+    </div>
+
+
+    <div class="footer-column">
+
+      <h4>About</h4>
+
+      <button onclick="showView('story')">
+        Our Story
+      </button>
+
+      <button onclick="showView('shipping')">
+        Shipping
+      </button>
+
+    </div>
+
+
+    <div class="footer-column">
+
+      <h4>Connect</h4>
+
+      <a
+        href="mailto:Enquire@nurvahijabs.com"
+      >
+        Email Us
+      </a>
+
+      <a
+        href="https://instagram.com/nurvahijabs"
+        target="_blank"
+      >
+        Instagram
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <div class="footer-bottom">
+
+    <span>
+      © 2026 NURVA HIJABS
+    </span>
+
+    <span>
+      Confidence in Every Layer.
+    </span>
+
+  </div>
+
+</footer>
+
+
+<!-- =========================
+     PRODUCT MODAL
+========================= -->
+
+<div
+  class="modal"
+  id="productModal"
+  onclick="closeModalOutside(event)"
+>
+
+  <div class="modal-content">
+
+    <button
+      class="close"
+      onclick="closeModal()"
+    >
+      ×
+    </button>
+
+    <div class="modal-image">
+
+      <img
+        id="modalImage"
+        src=""
+        alt=""
+      >
+
+    </div>
+
+    <div class="modal-info">
+
+      <div class="eyebrow" id="modalStatus">
+        Available
+      </div>
+
+      <h2 id="modalName">
+        Product
+      </h2>
+
+      <div
+        class="price"
+        id="modalPrice"
+      >
+        $0.00
+      </div>
+
+      <p id="modalDescription">
+        Product description.
+      </p>
+
+      <p id="modalMaterial"></p>
+
+      <p id="modalFeel"></p>
+
+      <button
+        class="btn"
+        id="modalAdd"
+      >
+        Add to Bag
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     CART
+========================= -->
+
+<div
+  class="cart-panel"
+  id="cartPanel"
+>
+
+  <div class="cart-head">
+
+    <h2>
+      Your Bag
+    </h2>
+
+    <button
+      class="close"
+      onclick="closeCart()"
+    >
+      ×
+    </button>
+
+  </div>
+
+  <div
+    class="cart-items"
+    id="cartItems"
+  >
+    Your bag is empty.
+  </div>
+
+  <div class="cart-total">
+
+    <span>
+      Items
+    </span>
+
+    <strong id="cartTotal">
+      0
+    </strong>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   PRODUCTS
+========================= */
+
+const products = [
+
+  {
+    id:1,
+    name:"Classic Jersey Hijab",
+    price:"$25.00",
+    image:"classic-jersey.jpg",
+    collections:["all","new","summer","fall"],
+    status:"Available",
+    material:"Soft jersey",
+    feel:"Soft & stretchy",
+    desc:"A versatile everyday hijab designed for comfort, coverage and easy styling."
+  },
+
+  {
+    id:2,
+    name:"Silk Touch Hijab",
+    price:"$42.99",
+    image:"silk-touch.jpg",
+    collections:["all","new","spring"],
+    status:"Available",
+    material:"Silk-touch fabric",
+    feel:"Smooth & elegant",
+    desc:"A refined hijab with a smooth finish for elevated everyday styling."
+  },
+
+  {
+    id:3,
+    name:"Premium Modal Hijab",
+    price:"$35.99",
+    image:"premium-modal.jpg",
+    collections:["all","summer","fall"],
+    status:"Available",
+    material:"Premium modal",
+    feel:"Soft & lightweight",
+    desc:"A lightweight premium essential designed for effortless comfort."
+  },
+
+  {
+    id:4,
+    name:"Winter Luxe Hijab",
+    price:"$39.99",
+    image:"winter-luxe.jpg",
+    collections:["winter","coming"],
+    status:"Coming Soon",
+    material:"Premium winter blend",
+    feel:"Warm & soft",
+    desc:"A future seasonal layer designed for cooler days."
+  }
+
+];
+
+
+/* =========================
+   CART
+========================= */
+
+let cart = [];
+
+
+/* =========================
+   VIEW SWITCHING
+========================= */
+
+function showView(view){
+
+  document.querySelectorAll(".view")
+    .forEach(v => v.classList.remove("active"));
+
+  const target =
+    document.getElementById(view + "View");
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  document
+    .getElementById("navLinks")
+    .classList.remove("active");
+}
+
+
+/* =========================
+   MOBILE MENU
+========================= */
+
+function toggleMenu(){
+
+  document
+    .getElementById("navLinks")
+    .classList.toggle("active");
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function toggleSearch(){
+
+  const box =
+    document.getElementById("searchBox");
+
+  box.classList.toggle("active");
+
+  if(box.classList.contains("active")){
+    document
+      .getElementById("searchInput")
+      .focus();
+  }
+
+}
+
+
+function searchProducts(){
+
+  const query =
+    document
+      .getElementById("searchInput")
+      .value
+      .toLowerCase()
+      .trim();
+
+  const filtered =
+    products.filter(product =>
+      product.name.toLowerCase().includes(query)
+    );
+
+  renderProducts(
+    filtered,
+    "shopProducts"
+  );
+
+  showView("shop");
+}
+
+
+/* =========================
+   RENDER PRODUCTS
+========================= */
+
+function renderProducts(
+  list = products,
+  target = "shopProducts"
+){
+
+  const container =
+    document.getElementById(target);
+
+  if(!container) return;
+
+  container.innerHTML = "";
+
+  list.forEach(product => {
+
+    container.innerHTML += `
+
+      <article
+        class="product-card"
+        onclick="openProduct(${product.id})"
+      >
+
+        <div class="product-image">
+
+          ${
+            product.status !== "Available"
+            ?
+            `<span class="status">
+              ${product.status}
+            </span>`
+            :
+            ""
+          }
+
+          <img
+            src="${product.image}"
+            alt="${product.name}"
+            loading="lazy"
+          >
+
+        </div>
+
+        <div class="product-info">
+
+          <div class="product-name">
+            ${product.name}
+          </div>
+
+          <div class="product-price">
+            ${product.price}
+          </div>
+
+        </div>
+
+      </article>
+
+    `;
+
+  });
+
+}
+
+
+/* =========================
+   FILTER
+========================= */
+
+function filterCollection(
+  collection,
+  button
+){
+
+  document
+    .querySelectorAll(".filter")
+    .forEach(btn =>
+      btn.classList.remove("active")
+    );
+
+  if(button){
+    button.classList.add("active");
+  }
+
+  const filtered =
+    products.filter(product =>
+      product.collections.includes(collection)
+    );
+
+  renderProducts(
+    filtered,
+    "shopProducts"
+  );
+
+  showView("shop");
+}
+
+
+/* =========================
+   COLLECTION SHORTCUT
+========================= */
+
+function openCollection(collection){
+
+  showView("shop");
+
+  setTimeout(() => {
+
+    const buttons =
+      document.querySelectorAll(".filter");
+
+    buttons.forEach(btn =>
+      btn.classList.remove("active")
+    );
+
+    let targetButton = null;
+
+    buttons.forEach(btn => {
+
+      if(
+        btn.textContent
+          .toLowerCase()
+          .includes(collection === "new"
+            ? "new"
+            : collection)
+      ){
+        targetButton = btn;
+      }
+
+    });
+
+    filterCollection(
+      collection,
+      targetButton
+    );
+
+  },50);
+
+}
+
+
+/* =========================
+   PRODUCT MODAL
+========================= */
+
+function openProduct(id){
+
+  const product =
+    products.find(p => p.id === id);
+
+  if(!product) return;
+
+  document
+    .getElementById("modalImage")
+    .src = product.image;
+
+  document
+    .getElementById("modalImage")
+    .alt = product.name;
+
+  document
+    .getElementById("modalName")
+    .textContent = product.name;
+
+  document
+    .getElementById("modalPrice")
+    .textContent = product.price;
+
+  document
+    .getElementById("modalDescription")
+    .textContent = product.desc;
+
+  document
+    .getElementById("modalMaterial")
+    .textContent =
+      "Material: " + product.material;
+
+  document
+    .getElementById("modalFeel")
+    .textContent =
+      "Feel: " + product.feel;
+
+  document
+    .getElementById("modalStatus")
+    .textContent =
+      product.status;
+
+  document
+    .getElementById("modalAdd")
+    .onclick = () => addToCart(product);
+
+  document
+    .getElementById("productModal")
+    .classList.add("active");
+
+}
+
+
+function closeModal(){
+
+  document
+    .getElementById("productModal")
+    .classList.remove("active");
+
+}
+
+
+function closeModalOutside(event){
+
+  if(
+    event.target.id === "productModal"
+  ){
+    closeModal();
+  }
+
+}
+
+
+/* =========================
+   CART
+========================= */
+
+function addToCart(product){
+
+  if(product.status !== "Available"){
+    return;
+  }
+
+  cart.push(product);
+
+  updateCart();
+
+  closeModal();
+
+  openCart();
+
+}
+
+
+function updateCart(){
+
+  document
+    .getElementById("cartCount")
+    .textContent = cart.length;
+
+  const items =
+    document.getElementById("cartItems");
+
+  if(cart.length === 0){
+
+    items.innerHTML =
+      "Your bag is empty.";
+
+    document
+      .getElementById("cartTotal")
+      .textContent = "0";
+
+    return;
+  }
+
+  items.innerHTML =
+    cart.map(item => `
+      <div style="
+        padding:12px 0;
+        border-bottom:1px solid #eee;
+      ">
+        <strong>
+          ${item.name}
+        </strong>
+
+        <br>
+
+        <small>
+          ${item.price}
+        </small>
+      </div>
+    `).join("");
+
+  document
+    .getElementById("cartTotal")
+    .textContent =
+      cart.length;
+
+}
+
+
+function openCart(){
+
+  document
+    .getElementById("cartPanel")
+    .classList.add("active");
+
+}
+
+
+function closeCart(){
+
+  document
+    .getElementById("cartPanel")
+    .classList.remove("active");
+
+}
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+renderProducts(
+  products.slice(0,3),
+  "featuredProducts"
+);
+
+renderProducts(
+  products,
+  "shopProducts"
+);
+
+updateCart();
+
+</script>
+
+</body>
+</html>
