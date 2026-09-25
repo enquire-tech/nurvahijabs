@@ -1,0 +1,478 @@
+// =====================================================================
+// NURVA HIJABS — send-order-emails Supabase Edge Function
+//
+// WHERE THIS GOES: this file is NOT pasted into Supabase's SQL Editor.
+// It's deployed as an Edge Function, e.g. via the Supabase CLI:
+//
+//   supabase functions new send-order-emails
+//   (replace the generated index.ts with this file's contents)
+//   supabase functions deploy send-order-emails
+//   supabase secrets set RESEND_API_KEY=your_real_key_here
+//
+// Before deploying this version, run nurva-orders-email-lease-patch.sql
+// AND nurva-orders-phone-patch.sql in the Supabase SQL Editor — together
+// they add the two columns this version needs (email_lease_expires_at
+// and customer_phone). nurva-orders-setup.sql must already have been run
+// first if it hasn't been.
+//
+// The RESEND_API_KEY secret is stored by Supabase, not in this file and
+// not in index.html — it's only ever read at runtime on Supabase's
+// server via Deno.env.get(), so it's never exposed to the browser.
+// SUPABASE_URL, SUPABASE_ANON_KEY and SUPABASE_SERVICE_ROLE_KEY are
+// injected automatically by Supabase into every Edge Function — you do
+// not set those yourself.
+//
+// This example uses Resend (resend.com) as the email provider — swap in
+// your provider of choice (Postmark, SendGrid, etc.) using the same
+// pattern if you'd rather use something else.
+//
+// Security & reliability properties of this version:
+//   • Requires a valid, signed-in Supabase user (via the caller's JWT).
+//   • Verifies that user actually owns the order being requested
+//     (checked through a user-scoped client, so Row Level Security
+//     enforces this rather than trusting the request body).
+//   • CORS is restricted to https://nurvahijabs.com.
+//   • OPTIONS preflight requests are handled explicitly.
+//   • Crash-safe claiming via an EXPIRING LEASE, not a permanent flag:
+//       - Claiming sets email_lease_expires_at a few minutes into the
+//         future, and only succeeds if the order isn't already sent AND
+//         no other lease is currently active (or the previous lease has
+//         already expired).
+//       - On a normal, caught failure, the lease is cleared immediately
+//         so a legitimate retry doesn't have to wait.
+//       - On a crash / timeout / kill that never reaches our catch block,
+//         nothing releases the lease early — but because it has a fixed
+//         expiry, a later invocation can always reclaim the order once
+//         that time passes. No order can be permanently stuck.
+//       - emails_sent_at (unchanged, already existed) is the one true
+//         "done" marker, set only after both emails succeed.
+//       - Both the final "mark as sent" update and the on-failure
+//         cleanup update only touch the row if this invocation still
+//         holds the exact lease it claimed (.eq("email_lease_expires_at",
+//         leaseUntil)). This stops one invocation from ever clobbering
+//         a different invocation's active lease or finalized state. If
+//         the finalize update affects zero rows (our lease was replaced
+//         before we could write), that's handled explicitly rather than
+//         assumed to be success — see step 6 below.
+//   • Defense in depth against duplicate sends: even in the unlikely case
+//     two invocations end up processing the same order around a lease
+//     boundary (e.g. one was merely slow, not crashed), each email is
+//     sent with a stable per-recipient Resend Idempotency-Key
+//     (order number + "customer" / "store"). Resend itself will not
+//     dispatch the same email twice for the same key, regardless of how
+//     many times this function attempts it — so the lease is a
+//     coordination optimization, not the sole guarantee against
+//     duplicates; the idempotency key is.
+//   • A failed send from Resend is treated as a real failure (the
+//     function returns a non-2xx status), instead of being silently
+//     swallowed.
+//   • All customer-, order- and product-derived values are HTML-escaped
+//     before being placed into email HTML.
+//
+// Email content in this version:
+//   • Item prices may already be formatted currency strings (e.g.
+//     "$25.00") rather than raw numbers — a parseMoney()/money() helper
+//     handles both safely instead of turning a formatted string into
+//     "$0.00".
+//   • shipping_address is read as the JSONB object it actually is (its
+//     real keys: address, address2, city, state, postal, country), not
+//     stringified as a whole. No country is ever invented — a blank
+//     country from checkout stays blank in the email.
+//   • customer_phone (its own column, alongside customer_name /
+//     customer_email) is included in the business notification email
+//     when present.
+//   • No tax line is included anywhere: this system does not currently
+//     calculate or store tax, so none is invented.
+//   • Order date is included, taken from the order's created_at.
+// =====================================================================
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const STORE_NOTIFICATION_EMAIL = "Enquire@nurvahijabs.com";
+const FROM_EMAIL = "orders@nurvahijabs.com"; // must be a domain verified with your email provider
+
+// How long a claim is held before it's considered abandoned (crashed) and
+// eligible for another invocation to reclaim. Generous relative to how
+// long two sequential Resend calls actually take, so a legitimately-still-
+// running invocation is unlikely to get raced — but even if it happens,
+// the per-recipient Idempotency-Key above is what actually prevents a
+// duplicate send from reaching anyone.
+const EMAIL_LEASE_MINUTES = 5;
+
+const ALLOWED_ORIGIN = "https://nurvahijabs.com";
+const corsHeaders = {
+ "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+ "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+ "Access-Control-Allow-Methods": "POST, OPTIONS",
+ Vary: "Origin",
+};
+
+function jsonResponse(body: unknown, status: number) {
+ return new Response(JSON.stringify(body), {
+   status,
+   headers: { ...corsHeaders, "Content-Type": "application/json" },
+ });
+}
+
+function escapeHtml(value: unknown): string {
+ return String(value ?? "")
+   .replace(/&/g, "&amp;")
+   .replace(/</g, "&lt;")
+   .replace(/>/g, "&gt;")
+   .replace(/"/g, "&quot;")
+   .replace(/'/g, "&#039;");
+}
+
+// Item prices coming from the website's products array are already
+// formatted currency strings (e.g. "$25.00"), not raw numbers — but
+// order totals/subtotal/shipping stored on the orders table ARE numeric
+// columns. This helper accepts either shape safely: it never produces
+// NaN/"$0.00" for a valid formatted string, and still works for a plain
+// number. Anything genuinely unparseable falls back to 0 rather than
+// throwing, so one bad value can't break the whole email.
+function parseMoney(value: unknown): number {
+ if (typeof value === "number" && Number.isFinite(value)) return value;
+ if (typeof value === "string") {
+   const cleaned = value.replace(/[^0-9.-]/g, "");
+   const n = Number(cleaned);
+   if (cleaned !== "" && Number.isFinite(n)) return n;
+ }
+ return 0;
+}
+function money(value: unknown): string {
+ return `$${parseMoney(value).toFixed(2)}`;
+}
+
+Deno.serve(async (req) => {
+ // Handle CORS preflight
+ if (req.method === "OPTIONS") {
+   return new Response("ok", { headers: corsHeaders });
+ }
+
+ if (req.method !== "POST") {
+   return jsonResponse({ error: "Method not allowed." }, 405);
+ }
+
+ if (!RESEND_API_KEY) {
+   return jsonResponse({ error: "RESEND_API_KEY secret is not configured." }, 500);
+ }
+
+ // ---- 1. Require an authenticated Supabase user ----
+ const authHeader = req.headers.get("Authorization");
+ if (!authHeader) {
+   return jsonResponse({ error: "Missing Authorization header." }, 401);
+ }
+
+ // A client scoped to the *caller's* JWT, not the service role. Any
+ // query made with this client is still subject to Row Level Security,
+ // which is what lets us prove ownership in step 3 below.
+ const callerClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+   global: { headers: { Authorization: authHeader } },
+ });
+
+ const { data: userData, error: userError } = await callerClient.auth.getUser();
+ if (userError || !userData?.user) {
+   return jsonResponse({ error: "Invalid or expired session." }, 401);
+ }
+
+ // ---- 2. Parse input ----
+ let orderNumber: string | undefined;
+ try {
+   const body = await req.json();
+   orderNumber = body?.orderNumber;
+ } catch {
+   return jsonResponse({ error: "Invalid JSON body." }, 400);
+ }
+ if (!orderNumber || typeof orderNumber !== "string") {
+   return jsonResponse({ error: "orderNumber is required." }, 400);
+ }
+
+ // ---- 3. Verify the caller owns this order ----
+ // Because callerClient carries the user's own JWT, RLS's
+ // "auth.uid() = user_id" policy means this select can only ever
+ // return a row if the order actually belongs to this user — an order
+ // number that exists but belongs to someone else comes back empty,
+ // same as one that doesn't exist at all, so nothing is leaked either way.
+ const { data: ownedOrder, error: ownershipError } = await callerClient
+   .from("orders")
+   .select("order_number")
+   .eq("order_number", orderNumber)
+   .single();
+
+ if (ownershipError || !ownedOrder) {
+   return jsonResponse({ error: "Order not found." }, 404);
+ }
+
+ // ---- 4. From here on, use the service-role client ----
+ // Required to write emails_sent_at / email_lease_expires_at (customers
+ // have no update policy on orders, by design) and to read full order
+ // details. It never leaves this server-side function.
+ const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+ // ---- 5. Atomically claim the order with an EXPIRING lease ----
+ // Succeeds only if:
+ //   - emails_sent_at is still NULL (not already fully sent), AND
+ //   - no lease is currently active: email_lease_expires_at is NULL or
+ //     already in the past (a prior invocation crashed / timed out).
+ // Postgres serializes concurrent UPDATEs to the same row and
+ // re-evaluates the WHERE clause against the just-committed values, so
+ // two overlapping requests cannot both win this claim.
+ const leaseUntil = new Date(Date.now() + EMAIL_LEASE_MINUTES * 60_000).toISOString();
+
+ const { data: claimedOrder, error: claimError } = await adminClient
+   .from("orders")
+   .update({ email_lease_expires_at: leaseUntil })
+   .eq("order_number", orderNumber)
+   .is("emails_sent_at", null)
+   .or(`email_lease_expires_at.is.null,email_lease_expires_at.lt.${new Date().toISOString()}`)
+   .select()
+   .single();
+
+ if (claimError || !claimedOrder) {
+   // The claim didn't succeed. Find out why so we don't lie to the
+   // caller about the order having already been sent when it might
+   // actually just be mid-flight in another invocation.
+   const { data: currentState } = await adminClient
+     .from("orders")
+     .select("emails_sent_at, email_lease_expires_at")
+     .eq("order_number", orderNumber)
+     .single();
+
+   if (currentState?.emails_sent_at) {
+     return jsonResponse({ success: true, alreadySent: true }, 200);
+   }
+   // Another invocation currently holds an unexpired lease.
+   return jsonResponse(
+     { success: false, status: "in_progress", message: "Order emails are already being sent." },
+     409,
+   );
+ }
+
+ // ---- 6. Send the emails, with escaped content and per-recipient
+ //         idempotency keys ----
+ const customerEmailSent = { done: false };
+ const storeEmailSent = { done: false };
+
+ try {
+   const items: Array<{ name: unknown; quantity: unknown; price: unknown }> =
+     Array.isArray(claimedOrder.items) ? claimedOrder.items : [];
+
+   // shipping_address is stored as a JSONB object (see nurva-orders-setup.sql
+   // / persistOrderToBackend() in index.html), not a flat string — read its
+   // real keys individually rather than stringifying the whole object.
+   const shippingAddress: Record<string, unknown> =
+     claimedOrder.shipping_address && typeof claimedOrder.shipping_address === "object"
+       ? claimedOrder.shipping_address
+       : {};
+
+   const addressLine1 = shippingAddress.address ? String(shippingAddress.address) : "";
+   const addressLine2 = shippingAddress.address2 ? String(shippingAddress.address2) : "";
+   const city = shippingAddress.city ? String(shippingAddress.city) : "";
+   const state = shippingAddress.state ? String(shippingAddress.state) : "";
+   const postal = shippingAddress.postal ? String(shippingAddress.postal) : "";
+   // No fallback/default here on purpose: only show a country if the
+   // customer actually provided one. Never invent "United States".
+   const country = shippingAddress.country ? String(shippingAddress.country) : "";
+   const cityStateZip = [city, state].filter(Boolean).join(", ") + (postal ? ` ${postal}` : "");
+
+   // Build the address as a list of only the lines that actually have
+   // content, so a missing optional field (address2, or an omitted
+   // country) simply doesn't appear rather than rendering as blank.
+   const addressLines = [addressLine1, addressLine2, cityStateZip.trim(), country].filter(
+     (line) => line && line.trim().length > 0,
+   );
+   const addressHtml = addressLines.map((line) => escapeHtml(line)).join("<br>") || "Not provided";
+
+   // customer_phone is its own column (added alongside customer_name /
+   // customer_email) — only shown if the customer actually provided one.
+   const phone = claimedOrder.customer_phone ? String(claimedOrder.customer_phone) : "";
+
+   const orderDate = claimedOrder.created_at
+     ? new Date(claimedOrder.created_at).toLocaleDateString("en-US", {
+         year: "numeric",
+         month: "long",
+         day: "numeric",
+       })
+     : "";
+
+   // Every item row uses money() so a formatted price string like
+   // "$25.00" is parsed and re-rendered correctly instead of becoming
+   // "$0.00" (which is what a naive Number("$25.00") would produce).
+   const itemsRowsHtml = items
+     .map(
+       (i) =>
+         `<tr><td style="padding:6px 8px;border-bottom:1px solid #eee;">${escapeHtml(i.name)}</td>` +
+         `<td style="padding:6px 8px;border-bottom:1px solid #eee;text-align:center;">${escapeHtml(i.quantity)}</td>` +
+         `<td style="padding:6px 8px;border-bottom:1px solid #eee;text-align:right;">${escapeHtml(money(i.price))}</td></tr>`,
+     )
+     .join("");
+   const itemsTableHtml = `
+     <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;">
+       <thead>
+         <tr>
+           <th style="text-align:left;padding:6px 8px;border-bottom:2px solid #171515;">Item</th>
+           <th style="text-align:center;padding:6px 8px;border-bottom:2px solid #171515;">Qty</th>
+           <th style="text-align:right;padding:6px 8px;border-bottom:2px solid #171515;">Price</th>
+         </tr>
+       </thead>
+       <tbody>${itemsRowsHtml}</tbody>
+     </table>`;
+
+   const safeName = escapeHtml(claimedOrder.customer_name);
+   const safeOrderNumber = escapeHtml(claimedOrder.order_number);
+   const safeCustomerEmail = escapeHtml(claimedOrder.customer_email);
+   const safeSubtotal = escapeHtml(money(claimedOrder.subtotal));
+   const safeShipping = escapeHtml(money(claimedOrder.shipping));
+   const safeTotal = escapeHtml(money(claimedOrder.total));
+   const safePhone = phone ? escapeHtml(phone) : "";
+   const safeOrderDate = escapeHtml(orderDate);
+
+   // No tax line: this system does not currently calculate or store
+   // tax anywhere, so nothing is invented here — subtotal + shipping =
+   // total, matching what checkout actually charges (in test mode).
+   const totalsHtml = `
+     <table style="width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:14px;">
+       <tr><td style="padding:4px 8px;">Subtotal</td><td style="padding:4px 8px;text-align:right;">${safeSubtotal}</td></tr>
+       <tr><td style="padding:4px 8px;">Shipping</td><td style="padding:4px 8px;text-align:right;">${safeShipping}</td></tr>
+       <tr><td style="padding:8px;font-weight:bold;border-top:2px solid #171515;">Total</td><td style="padding:8px;text-align:right;font-weight:bold;border-top:2px solid #171515;">${safeTotal}</td></tr>
+     </table>`;
+
+   await sendEmailOrThrow({
+     to: claimedOrder.customer_email,
+     subject: `Your NURVA order ${claimedOrder.order_number} (Test Mode)`,
+     html: `
+       <p>Hi ${safeName},</p>
+       <p>Thanks for your order — this is currently a <strong>test order</strong>, no payment was charged.</p>
+       <p><strong>Order:</strong> ${safeOrderNumber}${safeOrderDate ? ` &nbsp;·&nbsp; ${safeOrderDate}` : ""}</p>
+       ${itemsTableHtml}
+       ${totalsHtml}
+       <p><strong>Shipping to:</strong><br>${addressHtml}</p>
+       <p>— NURVA HIJABS</p>
+     `,
+     idempotencyKey: `${claimedOrder.order_number}:customer`,
+   });
+   customerEmailSent.done = true;
+
+   await sendEmailOrThrow({
+     to: STORE_NOTIFICATION_EMAIL,
+     subject: `New test order: ${claimedOrder.order_number}`,
+     html: `
+       <p>New test order placed by <strong>${safeName}</strong>.</p>
+       <p>
+         <strong>Email:</strong> ${safeCustomerEmail}<br>
+         ${safePhone ? `<strong>Phone:</strong> ${safePhone}<br>` : ""}
+         <strong>Order:</strong> ${safeOrderNumber}${safeOrderDate ? ` &nbsp;·&nbsp; ${safeOrderDate}` : ""}
+       </p>
+       <p><strong>Ship to:</strong><br>${addressHtml}</p>
+       ${itemsTableHtml}
+       ${totalsHtml}
+     `,
+     idempotencyKey: `${claimedOrder.order_number}:store`,
+   });
+   storeEmailSent.done = true;
+
+   // Both sends succeeded: mark the order as truly done and release
+   // the lease — but only if we still hold the exact lease we claimed
+   // in step 5 (.eq("email_lease_expires_at", leaseUntil)). If our
+   // lease expired mid-send and another invocation has since reclaimed
+   // the order, blindly writing emails_sent_at here could stomp on that
+   // other invocation's own in-flight work. Checking ownership first
+   // means this update either finalizes an order that's genuinely still
+   // ours, or safely does nothing.
+   const { data: finalizedRows, error: finalizeError } = await adminClient
+     .from("orders")
+     .update({ emails_sent_at: new Date().toISOString(), email_lease_expires_at: null })
+     .eq("order_number", orderNumber)
+     .eq("email_lease_expires_at", leaseUntil)
+     .select();
+
+   if (finalizeError) {
+     console.error(`send-order-emails: finalize update errored for ${orderNumber} (emails were sent successfully):`, finalizeError);
+   } else if (!finalizedRows || finalizedRows.length === 0) {
+     // We no longer held the lease at finalize time — something (most
+     // likely a very slow invocation, not a crash, since we got this
+     // far) reclaimed the order before we could write the final state.
+     // The emails for THIS request did send successfully, so we don't
+     // report failure to the caller. But we don't assume everything is
+     // fine either: check whether the order is now marked sent by
+     // whichever invocation currently owns it.
+     const { data: recheck } = await adminClient
+       .from("orders")
+       .select("emails_sent_at")
+       .eq("order_number", orderNumber)
+       .single();
+
+     if (!recheck?.emails_sent_at) {
+       // Genuinely anomalous: our lease was replaced, yet the order is
+       // still not marked sent by anyone. Make one best-effort attempt
+       // to finalize it (guarded by IS NULL so we still never overwrite
+       // a legitimate concurrent finalize), and log loudly either way
+       // so this is visible in your Supabase function logs.
+       console.error(
+         `send-order-emails: lease for ${orderNumber} was no longer owned at finalize time and the order was still unmarked — attempting a best-effort finalize.`,
+       );
+       await adminClient
+         .from("orders")
+         .update({ emails_sent_at: new Date().toISOString(), email_lease_expires_at: null })
+         .eq("order_number", orderNumber)
+         .is("emails_sent_at", null);
+     }
+   }
+
+   return jsonResponse({ success: true }, 200);
+ } catch (err) {
+   // A real, caught failure on one or both sends. Release the lease
+   // immediately so a legitimate retry doesn't have to wait out
+   // EMAIL_LEASE_MINUTES. Because each send above used a stable
+   // per-recipient Idempotency-Key, a retry is safe: whichever email
+   // already succeeded (customerEmailSent / storeEmailSent above) will
+   // not be re-sent by Resend even though this function will attempt it
+   // again — Resend recognizes the repeated key and returns the
+   // original result instead of dispatching a second message.
+   //
+   // Note what we deliberately do NOT rely on here: if the crash is
+   // severe enough that even this catch block never runs (hard kill,
+   // out-of-memory, an infrastructure-level timeout), this cleanup
+   // simply doesn't happen — and that's fine, because the lease set in
+   // step 5 already has a fixed expiry. A later invocation will reclaim
+   // the order once EMAIL_LEASE_MINUTES has passed, with no manual
+   // intervention needed.
+   // Only clear the lease if we still own the exact one we claimed —
+   // otherwise we could clear a different (later) invocation's active
+   // lease out from under it, defeating the whole point of the claim.
+   await adminClient
+     .from("orders")
+     .update({ email_lease_expires_at: null })
+     .eq("order_number", orderNumber)
+     .eq("email_lease_expires_at", leaseUntil)
+     .is("emails_sent_at", null);
+
+   console.error(
+     `send-order-emails failed for ${orderNumber} (customer sent: ${customerEmailSent.done}, store sent: ${storeEmailSent.done}):`,
+     err,
+   );
+   return jsonResponse({ error: "Failed to send order emails." }, 502);
+ }
+});
+
+async function sendEmailOrThrow(
+ { to, subject, html, idempotencyKey }: { to: string; subject: string; html: string; idempotencyKey: string },
+) {
+ const res = await fetch("https://api.resend.com/emails", {
+   method: "POST",
+   headers: {
+     Authorization: `Bearer ${RESEND_API_KEY}`,
+     "Content-Type": "application/json",
+     "Idempotency-Key": idempotencyKey,
+   },
+   body: JSON.stringify({ from: FROM_EMAIL, to, subject, html }),
+ });
+ if (!res.ok) {
+   const detail = await res.text();
+   throw new Error(`Resend request failed (${res.status}) for key "${idempotencyKey}": ${detail}`);
+ }
+}
