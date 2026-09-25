@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NURVA HIJABS</title>
+<meta name="robots" content="noindex">
+<script>
+/* GitHub Pages single-page-app redirect.
+  GitHub Pages serves this file for any path that has no real file, e.g.
+  /shop/classic-jersey-hijab, /account/orders or /checkout. It forwards the
+  visitor to "/?/shop/classic-jersey-hijab", and the small decoder script in
+  index.html restores the original URL before the site renders.
+  pathSegmentsToKeep = 0 because the site is served from the domain root
+  (custom domain nurvahijabs.com). */
+var pathSegmentsToKeep = 0;
+var l = window.location;
+l.replace(
+ l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+ l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+ l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+ (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+ l.hash
+);
+</script>
+</head>
+<body></body>
+</html>
