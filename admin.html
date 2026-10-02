@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#faf9f6">
+<title>NURVA Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Private admin dashboard. This page holds NO secrets and grants NO access by
+     itself: every action goes to the "admin-api" Edge Function, which checks the
+     signed-in user against the server-managed admin_users table on every call.
+     No visitor statistics are collected on this page. -->
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+:root{--paper:#faf9f6;--ink:#171515;--muted:#5c5850;--line:rgba(23,21,21,.12);--blue-light:#f2fbff;--blue:#b8e4ff;--blue-dark:#071b3d;--bad:#9b2c2c;--ok:#1f6b3a}
+body{font-family:"DM Sans",sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;font-size:14px}
+button,input,select{font-family:inherit;font-size:inherit}button{cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--blue-dark);outline-offset:2px}
+.topbar{height:5px;background:linear-gradient(90deg,#b9e5ff,#55afe9,#238edc,#071b3d)}
+header{position:sticky;top:0;z-index:50;background:rgba(250,249,246,.97);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
+.bar{max-width:1300px;margin:auto;padding:14px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{font-family:"Playfair Display",serif;font-size:24px;letter-spacing:.12em}
+.brand small{font-family:"DM Sans",sans-serif;font-size:10px;letter-spacing:.2em;color:var(--muted);margin-left:8px;vertical-align:middle}
+.who{margin-left:auto;font-size:12px;color:var(--muted);display:flex;gap:12px;align-items:center;min-width:0}
+.who span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw}
+.tabs{max-width:1300px;margin:auto;padding:0 22px;display:flex;gap:4px;overflow-x:auto}
+.tabs button{border:0;background:transparent;padding:11px 14px;border-bottom:2px solid transparent;color:var(--muted);white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink);font-weight:500}
+main{max-width:1300px;margin:auto;padding:24px 22px 80px}
+h1,h2{font-family:"Playfair Display",serif;font-weight:400}
+h1{font-size:34px;line-height:1.1;margin-bottom:6px}
+h2{font-size:22px;margin-bottom:10px}
+.lead{color:var(--muted);margin-bottom:18px}
+.card{background:#fff;border:1px solid var(--line);padding:18px;margin-bottom:14px}
+.card h3{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:10px}
+.btn{border:1px solid var(--ink);background:var(--ink);color:#fff;padding:11px 16px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;min-height:42px}
+.btn:hover{background:#fff;color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed;background:var(--ink);color:#fff}
+.btn.outline{background:#fff;color:var(--ink)}
+.btn.outline:hover{background:var(--ink);color:#fff}
+.btn.small{padding:7px 10px;min-height:34px;font-size:10px}
+.link{border:0;background:transparent;text-decoration:underline;color:var(--ink);padding:4px 0}
+input,select{width:100%;padding:11px 12px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:16px}
+input:focus,select:focus{outline:none;border-color:var(--ink)}
+label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;letter-spacing:.04em}
+.msg{margin-top:10px;font-size:13px;color:var(--muted)}.msg.error{color:var(--bad)}
+.notice{background:var(--blue-light);border:1px solid var(--blue);color:var(--blue-dark);padding:12px 14px;font-size:13px;margin-bottom:16px}
+.badge{display:inline-block;border:1px solid var(--line);padding:2px 7px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:#fff;white-space:nowrap}
+.badge.ok{border-color:#9bd3ad;color:var(--ok);background:#f1faf3}
+.badge.warn{border-color:#ecc77d;color:#7a5a12;background:#fff8e8}
+.badge.bad{border-color:#e5a9a9;color:var(--bad);background:#fff3f3}
+.badge.test{border-color:var(--blue);color:var(--blue-dark);background:var(--blue-light)}
+.auth{max-width:420px;margin:50px auto}
+.auth form{display:grid;gap:12px}
+/* Orders */
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.list{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:1.5fr 1fr 1.6fr 1fr .8fr 1fr;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);padding:12px 14px;text-align:left;width:100%;color:var(--ink)}
+.row:hover{border-color:var(--ink)}
+.row .sub{display:block;color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row strong{font-weight:600}
+.pager{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px;align-items:start}
+.detail{position:sticky;top:120px;max-height:calc(100vh - 140px);overflow:auto}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:4px 10px;font-size:13px}
+.kv dt{color:var(--muted)}
+.items div{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f0efeb;font-size:13px}
+.ship-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.ship-grid .full{grid-column:1/-1}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid #f0efeb;vertical-align:top}
+th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.back{display:none}
+/* Inventory */
+.inv{display:grid;gap:10px}
+.inv-row{display:grid;grid-template-columns:1.6fr .7fr .8fr .8fr .8fr auto;gap:10px;align-items:end;background:#fff;border:1px solid var(--line);padding:14px}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;margin:0;color:var(--ink)}
+.check input{width:18px;height:18px;accent-color:var(--ink)}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stat{background:#fff;border:1px solid var(--line);padding:16px}
+.stat span{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stat strong{font-family:"Playfair Display",serif;font-size:30px;font-weight:400}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:100;max-width:calc(100% - 32px)}
+.toast.show{opacity:1}
+@media(max-width:1000px){
+.layout{grid-template-columns:1fr}
+.detail{position:static;max-height:none}
+.layout.has-detail .list-pane{display:none}
+.back{display:inline-block;margin-bottom:12px}
+.filters{grid-template-columns:1fr 1fr}
+.filters .full{grid-column:1/-1}
+.row{grid-template-columns:1fr auto;gap:4px 10px}
+.row .c-date,.row .c-type{display:none}
+.inv-row{grid-template-columns:1fr 1fr}
+.inv-row .name{grid-column:1/-1}
+.stats{grid-template-columns:1fr 1fr}
+.two{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+main{padding:18px 14px 70px}.bar,.tabs{padding-left:14px;padding-right:14px}
+.ship-grid{grid-template-columns:1fr}
+.actions{grid-template-columns:1fr}
+.kv{grid-template-columns:95px 1fr}
+h1{font-size:28px}
+#detail table,#detail tbody,#detail tr,#detail td{display:block;width:100%}
+#detail thead{display:none}
+#detail tr{border-bottom:1px solid #f0efeb;padding:8px 0}
+#detail td{border:0;padding:2px 0}
+}
+</style>
+</head>
+<body>
+<div class="topbar"></div>
+<header>
+<div class="bar"><div class="brand">NURVA<small>ADMIN</small></div><div class="who" id="who" hidden><span id="whoEmail"></span><button class="link" type="button" onclick="adminSignOut()">Sign out</button></div></div>
+<nav class="tabs" id="tabs" role="tablist" hidden>
+<button role="tab" id="tab-orders" aria-selected="true" onclick="showTab('orders')">Orders</button>
+<button role="tab" id="tab-inventory" aria-selected="false" onclick="showTab('inventory')">Inventory</button>
+<button role="tab" id="tab-stats" aria-selected="false" onclick="showTab('stats')">Statistics</button>
+</nav>
+</header>
+
+<main>
+<div id="loading" class="lead">Loading…</div>
+
+<section class="auth" id="signin" hidden>
+<h1>Admin sign in.</h1>
+<p class="lead">Use your NURVA account. Access is granted only to accounts on the server's administrator list.</p>
+<form onsubmit="adminSignIn(event)">
+<div><label for="aEmail">Email</label><input id="aEmail" type="email" autocomplete="username" required></div>
+<div><label for="aPass">Password</label><input id="aPass" type="password" autocomplete="current-password" required></div>
+<button class="btn" id="aBtn" type="submit">Sign In</button>
+</form>
+<div class="msg" id="aMsg" role="status"></div>
+</section>
+
+<section class="auth" id="denied" hidden>
+<h1>No admin access.</h1>
+<p class="lead" id="deniedText">This account isn't on the administrator list.</p>
+<button class="btn outline" type="button" onclick="adminSignOut()">Sign out</button>
+</section>
+
+<!-- ORDERS -->
+<section id="ordersTab" hidden>
+<div class="layout" id="ordersLayout">
+<div class="list-pane">
+<h1>Orders</h1>
+<p class="lead">All orders are test orders until live payments are added. Shipping updates are entered by hand.</p>
+<div class="filters">
+<div class="full"><label for="fSearch">Search</label><input id="fSearch" type="search" placeholder="Order number, name or email" oninput="debouncedLoad()"></div>
+<div><label for="fStatus">Status</label><select id="fStatus" onchange="loadOrders(1)"><option value="">All</option><option>Test Order</option><option>Shipped</option><option>Out for Delivery</option><option>Delivered</option><option>Cancelled</option><option>Received</option><option>Processing</option></select></div>
+<div><label for="fType">Customer</label><select id="fType" onchange="loadOrders(1)"><option value="">All</option><option value="guest">Guest</option><option value="account">Account</option></select></div>
+<div><label for="fEmail">Emails</label><select id="fEmail" onchange="loadOrders(1)"><option value="">All</option><option value="problem">Problems / needs review</option><option value="pending">Pending</option><option value="sent">All sent</option></select></div>
+</div>
+<div class="list" id="orderList"></div>
+<div class="pager"><button class="btn outline small" id="prevBtn" type="button" onclick="loadOrders(state.page-1)">‹ Previous</button><span id="pageInfo" class="msg" style="margin:0"></span><button class="btn outline small" id="nextBtn" type="button" onclick="loadOrders(state.page+1)">Next ›</button></div>
+</div>
+<div class="detail" id="detailPane" hidden>
+<button class="link back" type="button" onclick="closeDetail()">‹ Back to orders</button>
+<div id="detail"></div>
+</div>
+</div>
+</section>
+
+<!-- INVENTORY -->
+<section id="inventoryTab" hidden>
+<h1>Inventory</h1>
+<div class="notice" id="invEnv"></div>
+<p class="lead">Leave a stock box empty to not track stock (unlimited). Stock can't go below zero: the server checks it inside each order, so two shoppers can't buy the last item. Price changes apply to new orders only; existing orders keep their prices.</p>
+<div class="inv" id="invList"></div>
+<div class="msg" id="invMsg" role="status"></div>
+</section>
+
+<!-- STATISTICS -->
+<section id="statsTab" hidden>
+<h1>Statistics</h1>
+<div style="max-width:220px;margin-bottom:14px"><label for="sDays">Period</label><select id="sDays" onchange="loadStats()"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select></div>
+<div id="stats"></div>
+</section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const SUPABASE_URL="https://imrmdmzzhiecumepowon.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_zS-dLxe-w_b_IPzvu8RZuw_cpdVGq2o";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+/* ---------- Session + request bookkeeping ----------
+ authGen changes on every sign-in, sign-out or account change (in any tab).
+ Each request remembers the generation it started in; a response that arrives
+ after the generation changed is discarded, so one account's data can never be
+ drawn into another session. Each view also numbers its requests so an older,
+ slower response can't overwrite a newer search, order, inventory or report. */
+let authGen=0,adminUserId=null;
+const seq={boot:0,list:0,detail:0,inventory:0,stats:0};
+const state={page:1,pageSize:20,total:0,current:null,busy:false,tab:"orders",pollTimer:null,pollCount:0};
+const savingProduct=new Set();
+const esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+const money=n=>"$"+Number(n||0).toFixed(2);
+const fmt=v=>{const d=new Date(v);return isNaN(d)?"":d.toLocaleString(undefined,{year:"numeric",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})};
+const $=id=>document.getElementById(id);
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2800)}
+function setMsg(id,t,err){const e=$(id);if(!e)return;e.textContent=t||"";e.classList.toggle("error",!!err)}
+class StaleError extends Error{constructor(){super("stale");this.stale=true}}
+
+async function api(action,payload){
+const gen=authGen;
+const {data:s}=await sb.auth.getSession();
+if(gen!==authGen)throw new StaleError();
+const token=s?.session?.access_token;
+if(!token)throw Object.assign(new Error("Please sign in."),{status:401});
+const res=await sb.functions.invoke("admin-api",{body:{action,...(payload||{})},headers:{Authorization:`Bearer ${token}`}});
+if(gen!==authGen)throw new StaleError();     /* signed out / switched account while waiting */
+if(res.error){
+let msg="Something went wrong.",status=0,code="";
+try{const r=res.error.context;status=r.status;const b=await r.json();msg=b.error||msg;code=b.code||""}catch(e){}
+if(gen!==authGen)throw new StaleError();
+throw Object.assign(new Error(msg),{status,code});
+}
+return res.data;
+}
+
+/* Removes every trace of the previous session from the page and from memory. */
+function clearAll(){
+authGen++;adminUserId=null;
+Object.keys(seq).forEach(k=>seq[k]++);
+clearTimeout(state.pollTimer);clearTimeout(searchTimer);
+state.page=1;state.total=0;state.current=null;state.busy=false;state.pollCount=0;savingProduct.clear();
+["detail","orderList","invList","stats","invEnv"].forEach(id=>{$(id).innerHTML=""});
+["pageInfo","whoEmail","aMsg","invMsg","toast"].forEach(id=>{$(id).textContent=""});
+$("toast").classList.remove("show");
+["fSearch","aEmail","aPass"].forEach(id=>{$(id).value=""});
+["fStatus","fType","fEmail"].forEach(id=>{$(id).value=""});
+$("sDays").value="30";
+$("detailPane").hidden=true;$("ordersLayout").classList.remove("has-detail");
+$("who").hidden=true;$("tabs").hidden=true;
+["ordersTab","inventoryTab","statsTab","denied"].forEach(id=>{$(id).hidden=true});
+}
+function showOnly(which){["loading","signin","denied"].forEach(id=>{$(id).hidden=id!==which})}
+
+async function boot(){
+clearAll();
+const gen=authGen,my=++seq.boot;
+showOnly("loading");
+let session=null;
+try{const {data}=await sb.auth.getSession();session=data?.session||null}catch(e){}
+if(gen!==authGen||my!==seq.boot)return;
+if(!session){showOnly("signin");return}
+adminUserId=session.user.id;
+try{
+await api("whoami");
+if(gen!==authGen)return;
+$("whoEmail").textContent=session.user.email||"";$("who").hidden=false;
+/* This device belongs to an administrator: don't count its storefront visits. */
+try{localStorage.setItem("nurvaAnalyticsIgnore","1")}catch(e){}
+showOnly(null);$("tabs").hidden=false;
+showTab("orders");
+}catch(e){
+if(e.stale||gen!==authGen)return;
+if(e.status===403){showOnly("denied");$("deniedText").textContent=e.message}
+else if(e.status===401){showOnly("signin")}
+else{showOnly("denied");$("deniedText").textContent="The admin service isn't reachable right now ("+e.message+")."}
+}
+}
+let signingIn=false;
+async function adminSignIn(ev){
+ev.preventDefault();
+if(signingIn)return;signingIn=true;
+$("aBtn").disabled=true;setMsg("aMsg","Signing in…");
+let error=null;
+try{({error}=await sb.auth.signInWithPassword({email:$("aEmail").value.trim(),password:$("aPass").value}))}catch(e){error=e}
+$("aPass").value="";$("aBtn").disabled=false;signingIn=false;
+if(error){setMsg("aMsg",error.message||"Sign-in failed.",true);return}
+announce();
+boot();
+}
+async function adminSignOut(){
+clearAll();showOnly("signin");            /* clear first, then tell the server */
+try{await sb.auth.signOut()}catch(e){}
+announce();
+}
+/* Another tab signed out or changed account → this page clears and re-checks. */
+let channel=null;
+try{channel=new BroadcastChannel("nurva-auth");channel.onmessage=()=>recheck()}catch(e){}
+function announce(){try{if(channel)channel.postMessage("changed")}catch(e){}}
+let recheckSeq=0;
+async function recheck(){
+const my=++recheckSeq;
+let id=null;
+try{const {data}=await sb.auth.getSession();id=data?.session?.user?.id||null}catch(e){}
+if(my!==recheckSeq)return;
+if(id!==adminUserId)boot();
+}
+window.addEventListener("storage",e=>{if(e.key===null||/^sb-.*-auth-token/.test(e.key||""))recheck()});
+sb.auth.onAuthStateChange((ev,session)=>{setTimeout(()=>{
+const id=session&&session.user?session.user.id:null;
+if(ev==="SIGNED_OUT"||id!==adminUserId){if(!signingIn)recheck()}
+},0)});
+window.addEventListener("pageshow",e=>{if(e.persisted)boot()});
+
+function showTab(t){
+state.tab=t;
+["orders","inventory","stats"].forEach(x=>{$("tab-"+x).setAttribute("aria-selected",String(x===t));$(x+"Tab").hidden=x!==t});
+if(t==="orders")loadOrders(state.page||1);
+if(t==="inventory")loadInventory();
+if(t==="stats")loadStats();
+}
+
+/* ---------- Orders ---------- */
+let searchTimer=null;
+function debouncedLoad(){clearTimeout(searchTimer);searchTimer=setTimeout(()=>loadOrders(1),300)}
+const EMAIL_BADGE={sent:["ok","Emails sent"],pending:["warn","Email pending"],problem:["bad","Email problem"],legacy_review:["bad","Legacy · review"]};
+async function loadOrders(page){
+page=Math.max(1,page||1);
+const my=++seq.list;                         /* only the newest search/filter/page may draw */
+$("orderList").innerHTML='<div class="msg">Loading…</div>';
+try{
+const r=await api("list_orders",{search:$("fSearch").value,status:$("fStatus").value,type:$("fType").value,emailState:$("fEmail").value,page,pageSize:state.pageSize});
+if(my!==seq.list)return;
+state.page=page;state.total=r.total;
+const pages=Math.max(1,Math.ceil(r.total/state.pageSize));
+$("pageInfo").textContent=`Page ${page} of ${pages} · ${r.total} order${r.total===1?"":"s"}`;
+$("prevBtn").disabled=page<=1;$("nextBtn").disabled=page>=pages;
+$("orderList").innerHTML=r.rows.length?r.rows.map(o=>{const b=EMAIL_BADGE[o.emailState]||["","—"];return `<button class="row" type="button" data-order="${esc(o.orderNumber)}" onclick="openOrder(this.dataset.order)">
+<span><strong>${esc(o.orderNumber)}</strong><span class="sub">${esc(o.customerName||"")}</span></span>
+<span class="c-date">${esc(fmt(o.createdAt))}</span>
+<span class="sub c-email">${esc(o.customerEmail||"")}</span>
+<span><span class="badge">${esc(o.status)}</span></span>
+<span class="c-type">${o.isGuest?"Guest":"Account"}</span>
+<span>${money(o.total)} <span class="badge ${b[0]}">${esc(b[1])}</span></span></button>`}).join(""):'<div class="card">No orders match.</div>';
+}catch(e){
+if(e.stale||my!==seq.list)return;
+$("orderList").innerHTML=`<div class="card msg error">${esc(e.message)}</div>`;
+}
+}
+async function openOrder(n){
+const my=++seq.detail;                       /* only the most recently opened order may draw */
+clearTimeout(state.pollTimer);state.pollCount=0;state.current=null;
+$("detailPane").hidden=false;$("ordersLayout").classList.add("has-detail");
+$("detail").innerHTML='<div class="card">Loading…</div>';
+if(window.matchMedia("(max-width:1000px)").matches)window.scrollTo(0,0);
+try{
+const d=await api("get_order",{orderNumber:n});
+if(my!==seq.detail)return;
+renderDetail(d);
+}catch(e){
+if(e.stale||my!==seq.detail)return;
+$("detail").innerHTML=`<div class="card msg error">${esc(e.message)}</div>`;
+}
+}
+function closeDetail(){seq.detail++;clearTimeout(state.pollTimer);$("detailPane").hidden=true;$("ordersLayout").classList.remove("has-detail");state.current=null;$("detail").innerHTML=""}
+const ACTION_LABEL={shipped:"Shipped",out_for_delivery:"Out for delivery",delivered:"Delivered"};
+const KIND_LABEL={confirmation:"Order confirmation",shipped:"Shipped update",out_for_delivery:"Out-for-delivery update",delivered:"Delivered update",guest_link:"Guest order link"};
+function statusBadge(s){const c={sent:"ok",pending:"warn",failed:"bad",needs_review:"bad",superseded:""}[s]??"";return `<span class="badge ${c}">${esc((s||"—").replace("_"," "))}</span>`}
+function emailActions(id,status){
+id=Number(id);
+if(status==="pending")return ` <button class="link" type="button" onclick="refreshEmails()">Refresh</button> <button class="link" type="button" onclick="retryEmail(${id})">Send now</button>`;
+if(status==="failed")return ` <button class="link" type="button" onclick="retryEmail(${id})">Retry</button> <button class="link" type="button" onclick="resendAsNew(${id})">Send as new…</button>`;
+if(status==="needs_review")return ` <button class="link" type="button" onclick="resendAsNew(${id})">Send as new…</button>`;
+return "";
+}
+function renderDetail(d){
+/* keep what the admin has typed if the same order is redrawn */
+const same=state.current&&state.current.order.orderNumber===d.order.orderNumber;
+const typed=same&&$("sCarrier")?{c:$("sCarrier").value,n:$("sNumber").value,u:$("sUrl").value}:null;
+state.current=d;const o=d.order;const a=o.address||{};
+const isTest=o.paymentStatus==="No charge";
+const stage=o.deliveredAt?3:o.outForDeliveryAt?2:o.shippedAt?1:0;
+const done=k=>d.events.some(e=>e.action===k);
+const btn=(k,label,rank)=>`<button class="btn${done(k)?" outline":""}" type="button" ${done(k)||stage>=rank||o.status==="Cancelled"?"disabled":""} onclick="shippingAction('${k}')">${done(k)?"✓ ":""}${label}</button>`;
+const anyPending=d.emails.some(e=>e.status==="pending");
+$("detail").innerHTML=`
+<div class="card">
+<h3>Order</h3>
+<h2>${esc(o.orderNumber)}</h2>
+<p><span class="badge">${esc(o.status)}</span> ${isTest?'<span class="badge test">Test order · no charge</span>':""} ${o.isGuest?'<span class="badge">Guest</span>':'<span class="badge">Account</span>'}</p>
+<p class="msg">Placed ${esc(fmt(o.createdAt))}${o.inventoryEnvironment?` · ${esc(o.inventoryEnvironment)} inventory`:""}</p>
+</div>
+<div class="card"><h3>Customer</h3><dl class="kv">
+<dt>Name</dt><dd>${esc(o.customerName)}</dd><dt>Email</dt><dd><a href="mailto:${esc(o.customerEmail)}">${esc(o.customerEmail)}</a></dd>
+<dt>Phone</dt><dd>${esc(o.customerPhone||"—")}</dd>
+<dt>Ship to</dt><dd>${[a.address,a.address2,[a.city,[a.state,a.postal].filter(Boolean).join(" ")].filter(Boolean).join(", "),a.country].filter(Boolean).map(esc).join("<br>")||"—"}</dd></dl></div>
+<div class="card"><h3>Items</h3><div class="items">${(o.items||[]).map(i=>`<div><span>${esc(i.name)} × ${Number(i.quantity||1)}</span><span>${money((typeof i.unitPrice==="number"?i.unitPrice:Number(String(i.price||"").replace(/[^0-9.]/g,"")))*Number(i.quantity||1))}</span></div>`).join("")}</div>
+<p style="margin-top:8px">Subtotal ${money(o.subtotal)} · Shipping ${Number(o.shipping)?money(o.shipping):"Free"} · <strong>Total ${money(o.total)}</strong></p></div>
+<div class="card"><h3>Shipping updates (entered manually)</h3>
+${isTest?'<p class="notice">Test order: customer emails will say these updates are simulated.</p>':""}
+<div class="ship-grid">
+<div><label for="sCarrier">Carrier</label><input id="sCarrier" maxlength="60" value="${esc(typed?typed.c:o.carrier||"")}" placeholder="e.g. UPS"></div>
+<div><label for="sNumber">Tracking number</label><input id="sNumber" maxlength="80" value="${esc(typed?typed.n:o.trackingNumber||"")}"></div>
+<div class="full"><label for="sUrl">Tracking link (https://…)</label><input id="sUrl" type="url" maxlength="500" value="${esc(typed?typed.u:o.trackingUrl||"")}" placeholder="https://"></div>
+</div>
+<div class="actions">${btn("shipped","Mark as Shipped & notify",1)}${btn("out_for_delivery","Mark Out for Delivery & notify",2)}${btn("delivered","Mark as Delivered & notify",3)}</div>
+<div class="msg" id="shipMsg" role="status"></div>
+${d.events.length?`<table style="margin-top:12px"><thead><tr><th>Action</th><th>When</th><th>Admin</th><th>Email</th></tr></thead><tbody>${d.events.map(e=>`<tr><td>${esc(ACTION_LABEL[e.action]||e.action)}${e.trackingNumber?`<br><small class="msg">${esc(e.carrier||"")} ${esc(e.trackingNumber)}</small>`:""}</td><td>${esc(fmt(e.createdAt))}</td><td>${esc(e.actorEmail||"")}</td><td>${statusBadge(e.emailStatus)}${emailActions(e.emailId,e.emailStatus)}</td></tr>`).join("")}</tbody></table>`:'<p class="msg">No shipping updates yet.</p>'}
+</div>
+<div class="card"><h3>Emails</h3>
+${anyPending?'<p class="msg" style="margin:0 0 10px">Pending emails are sent automatically. <button class="link" type="button" onclick="refreshEmails()">Refresh email status</button></p>':""}
+${o.legacyEmails&&!d.emails.some(e=>e.kind==="confirmation")?`<p class="notice">This order was created before the current email system. ${o.emailsSentAt?"Its confirmation was recorded as sent on "+esc(fmt(o.emailsSentAt))+".":`Its confirmation was not recorded as sent, and the earlier attempts are unknown. ${o.legacyLeaseActiveUntil?"Another sender is working on this order right now (until "+esc(fmt(o.legacyLeaseActiveUntil))+"); try again after that.":`Check Resend's log for ${esc(o.orderNumber)} first. <button class="link" type="button" onclick="sendLegacy()">Send confirmation now…</button>`}`}</p>`:""}
+${d.emails.length?`<table><thead><tr><th>Email</th><th>To</th><th>Status</th><th>Attempts</th></tr></thead><tbody>${d.emails.map(e=>`<tr><td>${esc(KIND_LABEL[e.kind]||e.kind)}<br><small class="msg">${esc(e.recipient)}</small></td><td>${esc(e.to||(e.recipient==="store"?"store":"customer"))}</td><td>${statusBadge(e.status)}${e.sentAt?`<br><small class="msg">${esc(fmt(e.sentAt))}</small>`:""}${e.status==="pending"&&e.nextAttemptAt?`<br><small class="msg">next try ${esc(fmt(e.nextAttemptAt))}</small>`:""}${e.lastError&&e.status!=="sent"?`<br><small class="msg error">${esc(e.lastError)}</small>`:""}<br>${emailActions(e.id,e.status)}</td><td>${Number(e.attempts)}</td></tr>`).join("")}</tbody></table>`:'<p class="msg">No emails.</p>'}
+</div>
+${o.isGuest?`<div class="card"><h3>Guest order links</h3><p class="msg" style="margin-top:0">${d.guestLinks.filter(l=>!l.revokedAt&&new Date(l.expiresAt)>new Date()).length} active (at most 5) · stored only as hashes.</p><button class="btn outline small" type="button" onclick="revokeLinks()">Revoke all links</button></div>`:""}`;
+schedulePoll();
+}
+/* While the open order has pending emails, refresh a few times automatically (bounded). */
+const POLL_DELAYS=[4000,8000,16000,32000];
+function schedulePoll(){
+clearTimeout(state.pollTimer);
+const d=state.current;
+if(!d||!d.emails.some(e=>e.status==="pending")||state.pollCount>=POLL_DELAYS.length)return;
+const my=seq.detail,gen=authGen,n=d.order.orderNumber;
+state.pollTimer=setTimeout(async()=>{
+if(my!==seq.detail||gen!==authGen||state.busy)return;
+state.pollCount++;
+try{const r=await api("refresh_emails",{orderNumber:n});if(my!==seq.detail||state.busy)return;renderDetail(r.detail)}catch(e){}
+},POLL_DELAYS[state.pollCount]);
+}
+/* Runs one action on the open order. The lock is taken before any awaited work;
+ the result is drawn only if the same order is still open in the same session.
+ On failure the buttons come back and everything typed is kept. */
+async function withBusy(fn){
+if(state.busy||!state.current)return;
+state.busy=true;
+const my=seq.detail,gen=authGen;
+clearTimeout(state.pollTimer);
+const enabled=[...document.querySelectorAll("#detail button")].filter(b=>!b.disabled);
+enabled.forEach(b=>b.disabled=true);
+let detail=null,ok=false;
+try{detail=await fn();ok=!!detail}catch(e){if(!e.stale&&my===seq.detail&&gen===authGen)toast(e.message)}
+state.busy=false;
+if(my!==seq.detail||gen!==authGen)return;      /* another order was opened, or the session changed */
+if(ok){state.pollCount=0;renderDetail(detail)}else enabled.forEach(b=>b.disabled=false);
+}
+function shippingAction(kind){
+const o=state.current&&state.current.order;if(!o)return;
+const n=o.orderNumber;
+withBusy(async()=>{
+setMsg("shipMsg","Saving…");
+try{
+const r=await api("shipping_action",{orderNumber:n,shippingAction:kind,carrier:$("sCarrier").value,trackingNumber:$("sNumber").value,trackingUrl:$("sUrl").value});
+const ev=r.detail.events.find(e=>e.action===kind);
+toast(r.result==="already_done"?"Already recorded — no duplicate email sent.":`${ACTION_LABEL[kind]} recorded. Email: ${ev?ev.emailStatus:"queued"}.`);
+loadOrders(state.page);
+return r.detail;
+}catch(e){if(!e.stale)setMsg("shipMsg",e.message,true);return null}
+});
+}
+function refreshEmails(){const n=state.current.order.orderNumber;withBusy(async()=>{const r=await api("refresh_emails",{orderNumber:n});toast("Email status refreshed.");return r.detail})}
+function retryEmail(id){const n=state.current.order.orderNumber;withBusy(async()=>{const r=await api("retry_email",{orderNumber:n,emailId:id});toast(r.result==="needs_review"?"Over 23 hours since the first attempt — check Resend's log, then use “Send as new”.":r.result==="sent"?"Already sent.":"Sending now.");return r.detail})}
+function resendAsNew(id){
+const n=state.current.order.orderNumber;
+if(!confirm("Send this as a NEW email?\n\nFirst check Resend's log for this order. If the customer already received the original, they'll get a second copy."))return;
+withBusy(async()=>{const r=await api("resend_as_new",{orderNumber:n,emailId:id,confirm:true});toast("New email queued.");return r.detail});
+}
+function sendLegacy(){
+const n=state.current.order.orderNumber;
+if(!confirm("Send the order confirmation for this older order?\n\nFirst check Resend's log: if it was already delivered, the customer will receive it twice."))return;
+withBusy(async()=>{
+const r=await api("send_legacy_confirmation",{orderNumber:n,confirm:true});
+toast({queued:"Confirmation queued.",already_queued:"Already queued — nothing new was added.",already_sent:"Already recorded as sent.",
+busy:"Another sender is working on this order right now. Try again in a few minutes.",nothing_to_send:"Nothing left to send.",not_allowed:"Not available for this order."}[r.result]||"Done.");
+return r.detail;
+});
+}
+function revokeLinks(){
+const n=state.current.order.orderNumber;
+if(!confirm("Revoke every private link for this guest order? The customer can request a new link from the order page."))return;
+withBusy(async()=>{const r=await api("revoke_guest_links",{orderNumber:n});toast(r.revoked+" link(s) revoked.");return r.detail});
+}
+
+/* ---------- Inventory ---------- */
+function renderInventory(d){
+$("invEnv").innerHTML="While payments are off, every order is a no-charge test order and uses <strong>TEST</strong> stock only. <strong>Live</strong> stock is kept separately for launch and is never changed by test orders.";
+$("invList").innerHTML=d.products.map(p=>`<form class="inv-row" data-product="${Number(p.id)}" onsubmit="saveProduct(event,${Number(p.id)})">
+<div class="name"><strong>${esc(p.name)}</strong><br><span class="msg">${p.testStock===0?'<span class="badge bad">Sold out (test)</span>':""}</span></div>
+<div><label class="check"><input type="checkbox" id="av${p.id}" ${p.available?"checked":""}> Available</label></div>
+<div><label for="pr${p.id}">Price ($)</label><input id="pr${p.id}" type="number" min="0" step="0.01" value="${Number(p.price).toFixed(2)}" required></div>
+<div><label for="ts${p.id}">Test stock</label><input id="ts${p.id}" type="number" min="0" step="1" value="${p.testStock??""}" placeholder="Not tracked"></div>
+<div><label for="ls${p.id}">Live stock</label><input id="ls${p.id}" type="number" min="0" step="1" value="${p.liveStock??""}" placeholder="Not tracked"></div>
+<div><button class="btn small" type="submit">Save</button></div></form>`).join("");
+}
+async function loadInventory(){
+const my=++seq.inventory;
+$("invList").innerHTML='<div class="msg">Loading…</div>';
+try{const d=await api("inventory");if(my!==seq.inventory)return;renderInventory(d)}
+catch(e){if(e.stale||my!==seq.inventory)return;$("invList").innerHTML=`<div class="card msg error">${esc(e.message)}</div>`}
+}
+async function saveProduct(ev,id){
+ev.preventDefault();
+/* Lock taken before any awaited work: repeated clicks / Enter presses do nothing. */
+if(savingProduct.size)return;
+const num=v=>v===""?null:Number(v);
+const ts=num($("ts"+id).value),ls=num($("ls"+id).value);
+if((ts!==null&&!Number.isInteger(ts))||(ls!==null&&!Number.isInteger(ls))){setMsg("invMsg","Stock must be a whole number.",true);return}
+savingProduct.add(id);
+const my=++seq.inventory;                    /* a load that started earlier must not overwrite this save */
+const buttons=[...document.querySelectorAll("#invList button")];buttons.forEach(b=>b.disabled=true);
+setMsg("invMsg","Saving…");
+try{
+const d=await api("set_product",{productId:id,available:$("av"+id).checked,price:Number($("pr"+id).value),testStock:ts,liveStock:ls});
+savingProduct.delete(id);
+if(my!==seq.inventory){if(state.tab==="inventory")loadInventory();return}   /* something newer started: reload fresh data */
+renderInventory(d);setMsg("invMsg","Saved.");
+}catch(e){
+savingProduct.delete(id);
+if(e.stale)return;
+buttons.forEach(b=>b.disabled=false);
+setMsg("invMsg",e.message,true);
+}
+}
+
+/* ---------- Statistics ---------- */
+const tbl=(rows,cols)=>rows.length?`<table><thead><tr>${cols.map(c=>`<th>${esc(c[0])}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c[1]])}</td>`).join("")}</tr>`).join("")}</tbody></table>`:'<p class="msg">No data yet.</p>';
+async function loadStats(){
+const my=++seq.stats;                        /* only the newest period selection may draw */
+$("stats").innerHTML='<div class="msg">Loading…</div>';
+try{
+const s=await api("analytics",{days:Number($("sDays").value)});
+if(my!==seq.stats)return;
+if(!s.configured){$("stats").innerHTML=`<div class="notice"><strong>Visitor statistics aren't connected yet.</strong> No visits have been received. To turn them on, deploy the “track” Edge Function and set <code>ANALYTICS_ENABLED=true</code> in index.html (SETUP.md, step 8).</div>
+<div class="stats"><div class="stat"><span>Test checkouts</span><strong>${Number(s.completionsTest)}</strong></div><div class="stat"><span>Live checkouts</span><strong>${Number(s.completionsLive)}</strong></div></div>`;return}
+$("stats").innerHTML=`<p class="msg" style="margin:0 0 10px">Last ${Number(s.days)} days</p><div class="stats">
+<div class="stat"><span>Page views</span><strong>${Number(s.pageviews)}</strong></div>
+<div class="stat"><span>Visitors (est.)</span><strong>${Number(s.uniqueVisitors)}</strong></div>
+<div class="stat"><span>Add to bag</span><strong>${Number(s.addToBag)}</strong></div>
+<div class="stat"><span>Checkout starts</span><strong>${Number(s.checkoutStarts)}</strong></div>
+<div class="stat"><span>Live checkouts</span><strong>${Number(s.completionsLive)}</strong></div>
+<div class="stat"><span>Test checkouts</span><strong>${Number(s.completionsTest)}</strong></div>
+<div class="stat"><span>Test-site events</span><strong>${Number(s.testEvents)}</strong></div></div>
+<p class="msg" style="margin-bottom:14px">Live figures exclude test traffic, test orders and administrators' devices. Visitors are estimated per day (cookieless) and summed over the period.</p>
+<div class="two"><div class="card"><h3>Popular pages</h3>${tbl(s.topPages,[["Page","path"],["Views","views"]])}</div>
+<div class="card"><h3>Products</h3>${tbl(s.topProducts,[["Product","product"],["Views","views"],["Add to bag","addToBag"]])}</div>
+<div class="card"><h3>Where visitors came from</h3>${tbl(s.referrers,[["Source","source"],["Visits","visits"]])}</div>
+<div class="card"><h3>Devices</h3>${tbl(s.devices,[["Device","device"],["Views","views"]])}</div></div>`;
+}catch(e){if(e.stale||my!==seq.stats)return;$("stats").innerHTML=`<div class="card msg error">${esc(e.message)}</div>`}
+}
+boot();
+</script>
+</body>
+</html>
