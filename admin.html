@@ -126,6 +126,7 @@ h1{font-size:28px}
 <nav class="tabs" id="tabs" role="tablist" hidden>
 <button role="tab" id="tab-orders" aria-selected="true" onclick="showTab('orders')">Orders</button>
 <button role="tab" id="tab-inventory" aria-selected="false" onclick="showTab('inventory')">Inventory</button>
+<button role="tab" id="tab-overview" aria-selected="false" onclick="showTab('overview')">Overview</button>
 <button role="tab" id="tab-stats" aria-selected="false" onclick="showTab('stats')">Statistics</button>
 </nav>
 </header>
@@ -188,6 +189,14 @@ h1{font-size:28px}
 <div class="msg" id="invMsg" role="status"></div>
 </section>
 
+<!-- OVERVIEW: uses the existing authenticated admin API -->
+<section id="overviewTab" hidden>
+<h1>Overview</h1>
+<p class="lead">Orders and stock needing attention. Test orders are shown separately from live orders.</p>
+<button class="btn outline small" type="button" onclick="loadOverview()">Refresh overview</button>
+<div id="overview" style="margin-top:14px" aria-live="polite"></div>
+</section>
+
 <!-- STATISTICS -->
 <section id="statsTab" hidden>
 <h1>Statistics</h1>
@@ -211,7 +220,7 @@ const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{aut
 let authGen=0,adminUserId=null,mfaFactorId=null;
 let lastActivity=Date.now();
 const IDLE_MS=15*60*1000;
-const seq={boot:0,list:0,detail:0,inventory:0,stats:0};
+const seq={boot:0,list:0,detail:0,inventory:0,stats:0,overview:0};
 const state={page:1,pageSize:20,total:0,current:null,busy:false,tab:"orders",pollTimer:null,pollCount:0};
 const savingProduct=new Set();
 const esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
@@ -247,7 +256,7 @@ $("mfaQr").removeAttribute("src");$("mfaSecret").textContent="";$("mfaCode").val
 Object.keys(seq).forEach(k=>seq[k]++);
 clearTimeout(state.pollTimer);clearTimeout(searchTimer);
 state.page=1;state.total=0;state.current=null;state.busy=false;state.pollCount=0;savingProduct.clear();
-["detail","orderList","invList","stats","invEnv"].forEach(id=>{$(id).innerHTML=""});
+["detail","orderList","invList","stats","invEnv","overview"].forEach(id=>{$(id).innerHTML=""});
 ["pageInfo","whoEmail","aMsg","invMsg","toast"].forEach(id=>{$(id).textContent=""});
 $("toast").classList.remove("show");
 ["fSearch","aEmail","aPass"].forEach(id=>{$(id).value=""});
@@ -255,7 +264,7 @@ $("toast").classList.remove("show");
 $("sDays").value="30";
 $("detailPane").hidden=true;$("ordersLayout").classList.remove("has-detail");
 $("who").hidden=true;$("tabs").hidden=true;
-["ordersTab","inventoryTab","statsTab","denied"].forEach(id=>{$(id).hidden=true});
+["ordersTab","inventoryTab","statsTab","overviewTab","denied"].forEach(id=>{$(id).hidden=true});
 }
 function showOnly(which){["loading","signin","denied","mfa"].forEach(id=>{$(id).hidden=id!==which})}
 
@@ -356,10 +365,11 @@ window.addEventListener("pageshow",e=>{if(e.persisted)boot()});
 
 function showTab(t){
 state.tab=t;
-["orders","inventory","stats"].forEach(x=>{$("tab-"+x).setAttribute("aria-selected",String(x===t));$(x+"Tab").hidden=x!==t});
+["orders","inventory","stats","overview"].forEach(x=>{$("tab-"+x).setAttribute("aria-selected",String(x===t));$(x+"Tab").hidden=x!==t});
 if(t==="orders")loadOrders(state.page||1);
 if(t==="inventory")loadInventory();
 if(t==="stats")loadStats();
+if(t==="overview")loadOverview();
 }
 
 /* ---------- Orders ---------- */
@@ -562,6 +572,76 @@ if(e.stale)return;
 buttons.forEach(b=>b.disabled=false);
 setMsg("invMsg",e.message,true);
 }
+}
+
+/* ---------- Overview ---------- */
+function overviewOrder(n){
+closeDetail();
+$("fSearch").value=n;$("fStatus").value="";$("fType").value="";$("fEmail").value="";
+showTab("orders");openOrder(n);
+}
+function overviewEmailProblems(){
+closeDetail();$("fSearch").value="";$("fStatus").value="";$("fType").value="";$("fEmail").value="problem";
+state.page=1;showTab("orders");
+}
+function overviewInventory(id){
+showTab("inventory");
+// Focus after the authenticated inventory request finishes, without changing stock.
+const my=seq.inventory,gen=authGen;
+let tries=0;
+const focus=()=>{
+if(gen!==authGen||my!==seq.inventory||state.tab!=="inventory")return;
+const row=document.querySelector('#invList [data-product="'+Number(id)+'"]');
+if(row){row.scrollIntoView({block:"center",behavior:"smooth"});row.querySelector("input")?.focus();return}
+if(++tries<40)setTimeout(focus,100);
+};focus();
+}
+async function loadOverview(){
+const my=++seq.overview;
+$("overview").innerHTML='<div class="msg">Loading…</div>';
+const current=()=>my===seq.overview&&state.tab==="overview";
+const cardError=(title,e)=>`<div class="card"><h2>${esc(title)}</h2><p class="msg error">Could not load: ${esc(e.message)}. Refresh to try again.</p></div>`;
+const orderPanel=async()=>{
+try{
+const rows=[];let total=0;
+for(let page=1;page<=100;page++){
+const r=await api("list_orders",{search:"",status:"",type:"",emailState:"",page,pageSize:20});
+if(!current())throw new StaleError();
+if(!Array.isArray(r.rows)||!Number.isFinite(Number(r.total)))throw new Error("Unexpected order response");
+total=Number(r.total);rows.push(...r.rows);
+if(rows.length>=total)break;
+if(!r.rows.length||page===100)throw new Error("Order list is too large or changed while loading; use Orders for the complete list");
+}
+const waiting=rows.filter(o=>["Received","Processing","Test Order"].includes(o.status));
+const test=waiting.filter(o=>o.paymentStatus==="No charge"||o.status==="Test Order");
+const live=waiting.filter(o=>!test.includes(o));
+const problems=rows.filter(o=>["problem","legacy_review"].includes(o.emailState));
+const list=waiting.slice(0,10);
+return `<h2>Needs attention</h2><div class="stats">
+<div class="stat"><span>Live orders awaiting shipment</span><strong>${live.length}</strong></div>
+<div class="stat"><span>Test orders awaiting shipment</span><strong>${test.length}</strong></div>
+<div class="stat"><span>Orders with email problems</span><strong>${problems.length}</strong><br><button class="link" type="button" onclick="overviewEmailProblems()">Review email problems</button></div>
+</div><div class="card"><h3>Awaiting shipment</h3><p class="msg">Review payment and order details before shipping. Test orders are not paid sales.</p>
+${list.length?`<table><thead><tr><th>Order</th><th>Status</th><th>Action</th></tr></thead><tbody>${list.map(o=>`<tr><td>${esc(o.orderNumber)}</td><td>${esc(o.status)} ${test.includes(o)?'<span class="badge test">Test</span>':""}</td><td><button class="link" type="button" data-order="${esc(o.orderNumber)}" onclick="overviewOrder(this.dataset.order)">Open order</button></td></tr>`).join("")}</tbody></table>`:'<p class="msg">No orders awaiting shipment.</p>'}
+${waiting.length>10?'<p class="msg">Showing the first 10. Open Orders to review the rest.</p>':""}
+<button class="link" type="button" onclick="showTab('orders')">View orders</button></div>`;
+}catch(e){if(e.stale)throw e;return cardError("Orders needing attention",e)}
+};
+const stockPanel=async()=>{
+try{
+const d=await api("inventory");if(!current())throw new StaleError();
+if(!Array.isArray(d.products))throw new Error("Unexpected inventory response");
+const low=v=>v!==null&&v!==undefined&&v!==""&&Number.isFinite(Number(v))&&Number(v)>=0&&Number(v)<=5;
+const products=d.products.filter(p=>low(p.testStock)||low(p.liveStock));
+return `<div class="card"><h2>Stock alerts</h2><p class="msg">Tracked stock of 5 or fewer. Empty stock means not tracked. Test and live stock stay separate.</p>
+${products.length?`<table><thead><tr><th>Product</th><th>Test stock</th><th>Live stock</th><th>Action</th></tr></thead><tbody>${products.map(p=>`<tr><td>${esc(p.name)}${!p.available?' <span class="badge">Unavailable</span>':""}</td><td>${p.testStock==null?"Not tracked":esc(p.testStock)}</td><td>${p.liveStock==null?"Not tracked":esc(p.liveStock)}</td><td><button class="link" type="button" onclick="overviewInventory(${Number(p.id)})">Open</button></td></tr>`).join("")}</tbody></table>`:'<p class="msg">No tracked products have low stock.</p>'}</div>`;
+}catch(e){if(e.stale)throw e;return cardError("Stock alerts",e)}
+};
+try{
+const panels=await Promise.all([orderPanel(),stockPanel()]);
+if(!current())return;
+$("overview").innerHTML=panels.join("")+`<p class="msg">Updated ${esc(new Date().toLocaleTimeString())}. Use Refresh overview to load changes.</p>`;
+}catch(e){if(e.stale||!current())return;$("overview").innerHTML=cardError("Overview",e)}
 }
 
 /* ---------- Statistics ---------- */
