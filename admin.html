@@ -133,6 +133,13 @@ h1{font-size:28px}
 <main>
 <div id="loading" class="lead">Loading…</div>
 
+<section class="auth" id="mfa" hidden>
+<h1>Secure admin access.</h1>
+<p class="lead" id="mfaLead">Enter the six-digit code from your authenticator app.</p>
+<div id="mfaSetup" hidden><img id="mfaQr" alt="Scan this code in your authenticator app" style="max-width:220px"><p>Or enter this setup key in the app:</p><code id="mfaSecret" style="overflow-wrap:anywhere"></code><p>Keep your authenticator backup safe. Do not share this key.</p></div>
+<form onsubmit="verifyAdminMfa(event)"><label for="mfaCode">Authenticator code</label><input id="mfaCode" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required><button id="mfaBtn" class="btn" type="submit">Verify</button></form>
+<div id="mfaMsg" class="msg" role="status"></div><button class="link" type="button" onclick="adminSignOut()">Sign out</button>
+</section>
 <section class="auth" id="signin" hidden>
 <h1>Admin sign in.</h1>
 <p class="lead">Use your NURVA account. Access is granted only to accounts on the server's administrator list.</p>
@@ -193,7 +200,7 @@ h1{font-size:28px}
 <script>
 const SUPABASE_URL="https://imrmdmzzhiecumepowon.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_zS-dLxe-w_b_IPzvu8RZuw_cpdVGq2o";
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{storage:window.sessionStorage,storageKey:"nurva-admin-session",detectSessionInUrl:false}});
 
 /* ---------- Session + request bookkeeping ----------
  authGen changes on every sign-in, sign-out or account change (in any tab).
@@ -201,7 +208,9 @@ const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
  after the generation changed is discarded, so one account's data can never be
  drawn into another session. Each view also numbers its requests so an older,
  slower response can't overwrite a newer search, order, inventory or report. */
-let authGen=0,adminUserId=null;
+let authGen=0,adminUserId=null,mfaFactorId=null;
+let lastActivity=Date.now();
+const IDLE_MS=15*60*1000;
 const seq={boot:0,list:0,detail:0,inventory:0,stats:0};
 const state={page:1,pageSize:20,total:0,current:null,busy:false,tab:"orders",pollTimer:null,pollCount:0};
 const savingProduct=new Set();
@@ -215,6 +224,7 @@ class StaleError extends Error{constructor(){super("stale");this.stale=true}}
 
 async function api(action,payload){
 const gen=authGen;
+if(Date.now()-lastActivity>=IDLE_MS){await adminSignOut();throw new StaleError()}
 const {data:s}=await sb.auth.getSession();
 if(gen!==authGen)throw new StaleError();
 const token=s?.session?.access_token;
@@ -232,7 +242,8 @@ return res.data;
 
 /* Removes every trace of the previous session from the page and from memory. */
 function clearAll(){
-authGen++;adminUserId=null;
+authGen++;adminUserId=null;mfaFactorId=null;
+$("mfaQr").removeAttribute("src");$("mfaSecret").textContent="";$("mfaCode").value="";$("mfaSetup").hidden=true;setMsg("mfaMsg","");
 Object.keys(seq).forEach(k=>seq[k]++);
 clearTimeout(state.pollTimer);clearTimeout(searchTimer);
 state.page=1;state.total=0;state.current=null;state.busy=false;state.pollCount=0;savingProduct.clear();
@@ -246,7 +257,7 @@ $("detailPane").hidden=true;$("ordersLayout").classList.remove("has-detail");
 $("who").hidden=true;$("tabs").hidden=true;
 ["ordersTab","inventoryTab","statsTab","denied"].forEach(id=>{$(id).hidden=true});
 }
-function showOnly(which){["loading","signin","denied"].forEach(id=>{$(id).hidden=id!==which})}
+function showOnly(which){["loading","signin","denied","mfa"].forEach(id=>{$(id).hidden=id!==which})}
 
 async function boot(){
 clearAll();
@@ -256,7 +267,7 @@ let session=null;
 try{const {data}=await sb.auth.getSession();session=data?.session||null}catch(e){}
 if(gen!==authGen||my!==seq.boot)return;
 if(!session){showOnly("signin");return}
-adminUserId=session.user.id;
+adminUserId=session.user.id;lastActivity=Date.now();
 try{
 await api("whoami");
 if(gen!==authGen)return;
@@ -267,11 +278,46 @@ showOnly(null);$("tabs").hidden=false;
 showTab("orders");
 }catch(e){
 if(e.stale||gen!==authGen)return;
+if(e.code==="mfa_required"){await prepareAdminMfa(gen);return}
 if(e.status===403){showOnly("denied");$("deniedText").textContent=e.message}
 else if(e.status===401){showOnly("signin")}
 else{showOnly("denied");$("deniedText").textContent="The admin service isn't reachable right now ("+e.message+")."}
 }
 }
+async function prepareAdminMfa(gen){
+showOnly("mfa");$("mfaBtn").disabled=true;
+try{
+const {data,error}=await sb.auth.mfa.listFactors();if(error)throw error;
+if(gen!==authGen)return;
+const verified=(data.totp||[]).find(f=>f.status==="verified");
+if(verified){mfaFactorId=verified.id;$("mfaLead").textContent="Enter the six-digit code from your authenticator app."}
+else{
+// Remove abandoned, unverified TOTP enrollments before starting a new setup.
+for(const f of (data.all||[]).filter(f=>f.factor_type==="totp"&&f.status==="unverified")){
+const r=await sb.auth.mfa.unenroll({factorId:f.id});if(r.error)throw r.error;if(gen!==authGen)return;
+}
+const r=await sb.auth.mfa.enroll({factorType:"totp",friendlyName:"NURVA Admin"});if(r.error)throw r.error;
+if(gen!==authGen)return;
+mfaFactorId=r.data.id;$("mfaLead").textContent="Set up an authenticator app, then enter its six-digit code.";
+const qr=r.data.totp.qr_code;
+if(!qr.startsWith("data:image/svg+xml"))throw new Error("Unexpected QR format. Use the setup key.");
+$("mfaQr").src=qr;$("mfaSecret").textContent=r.data.totp.secret;$("mfaSetup").hidden=false;
+}
+$("mfaBtn").disabled=false;$("mfaCode").focus();
+}catch(e){if(gen===authGen)setMsg("mfaMsg",e.message||"Authenticator setup failed. Sign out and retry.",true)}
+}
+async function verifyAdminMfa(ev){
+ev.preventDefault();if(!mfaFactorId||$("mfaBtn").disabled)return;
+const gen=authGen;$("mfaBtn").disabled=true;setMsg("mfaMsg","Verifying…");
+try{const {error}=await sb.auth.mfa.challengeAndVerify({factorId:mfaFactorId,code:$("mfaCode").value.trim()});if(error)throw error;
+if(gen!==authGen)return;$("mfaCode").value="";await boot();
+}catch(e){if(gen===authGen){$("mfaBtn").disabled=false;$("mfaCode").value="";setMsg("mfaMsg","Code verification failed. Enter a fresh code and try again.",true)}}
+}
+for(const ev of ["pointerdown","keydown","touchstart"]){window.addEventListener(ev,()=>{
+if(Date.now()-lastActivity>=IDLE_MS&&adminUserId){void adminSignOut();return}lastActivity=Date.now();
+},{passive:true})}
+setInterval(()=>{if(adminUserId&&Date.now()-lastActivity>=IDLE_MS)void adminSignOut()},15000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&adminUserId&&Date.now()-lastActivity>=IDLE_MS)void adminSignOut()});
 let signingIn=false;
 async function adminSignIn(ev){
 ev.preventDefault();
@@ -286,7 +332,7 @@ boot();
 }
 async function adminSignOut(){
 clearAll();showOnly("signin");            /* clear first, then tell the server */
-try{await sb.auth.signOut()}catch(e){}
+try{await sb.auth.signOut({scope:"local"})}catch(e){}
 announce();
 }
 /* Another tab signed out or changed account → this page clears and re-checks. */
